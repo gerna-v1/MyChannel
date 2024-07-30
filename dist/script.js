@@ -17,7 +17,7 @@ const switchMode = () => {
         button.style.color = 'white';
         body.style.backgroundImage = dark_background;
         body.style.color = 'white';
-        logo.src = '/bucket/img/mychannel_dark.png';
+        logo.src = '/img/mychannel_dark.png';
         header.style.backgroundColor = 'rgba(40, 40, 40, 1)';
         search.style.backgroundColor = 'rgba(50, 50, 50, 1)';
         videos.forEach(video => {
@@ -32,7 +32,7 @@ const switchMode = () => {
         body.style.backgroundImage = light_background;
         body.style.color = 'black';
         button.style.color = 'black';
-        logo.src = '/bucket/img/mychannel_light.png';
+        logo.src = '/img/mychannel_light.png';
         header.style.backgroundColor = 'rgba(255, 255, 255, 1)';
         search.style.backgroundColor = 'var(--searchcolor)';
         videos.forEach(video => {
