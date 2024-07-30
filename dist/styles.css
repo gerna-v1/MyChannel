@@ -1,0 +1,43 @@
+#main {
+    background-image: repeating-linear-gradient(90deg, rgba(30,30,30, 0) 0px, rgba(30,30,30, 0) 42px,rgba(32,32,32, 0.04) 42px, rgba(32,32,32, 0.04) 84px,rgba(33,33,33, 0.06) 84px, rgba(33,33,33, 0.06) 126px,rgba(31,31,31, 0.09) 126px, rgba(31,31,31, 0.09) 168px,rgba(31,31,31, 0.09) 168px, rgba(31,31,31, 0.09) 210px,rgba(32,32,32, 0.04) 210px, rgba(32,32,32, 0.04) 252px,rgba(34,34,34, 0.08) 252px, rgba(34,34,34, 0.08) 294px,rgba(33,33,33, 0.06) 294px, rgba(33,33,33, 0.06) 336px);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+#header {
+    max-height: 10vh;
+    min-height: 75px;
+}
+
+.search {
+    --searchcolor: hsl(220, 14%, 90%);
+
+    height: 50px;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px;
+    border-radius: 25px;
+    background-color: var(--searchcolor);
+}
+
+#searchbar {
+    flex: 1;
+    width: 100%;
+    padding: none;
+    border: none;
+    border-radius: 25px;
+    background-color: transparent;
+    outline: none;
+    color: var(--searchcolor - 1);
+}
+
+#searchbar::placeholder {
+    color: var(--searchcolor - 1);
+}
+
+#searchicon {
+    padding-left: 10px;
+}
