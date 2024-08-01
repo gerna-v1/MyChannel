@@ -1,5 +1,9 @@
 #main {
-    background-image: repeating-linear-gradient(90deg, rgba(30,30,30, 0) 0px, rgba(30,30,30, 0) 42px,rgba(32,32,32, 0.04) 42px, rgba(32,32,32, 0.04) 84px,rgba(33,33,33, 0.06) 84px, rgba(33,33,33, 0.06) 126px,rgba(31,31,31, 0.09) 126px, rgba(31,31,31, 0.09) 168px,rgba(31,31,31, 0.09) 168px, rgba(31,31,31, 0.09) 210px,rgba(32,32,32, 0.04) 210px, rgba(32,32,32, 0.04) 252px,rgba(34,34,34, 0.08) 252px, rgba(34,34,34, 0.08) 294px,rgba(33,33,33, 0.06) 294px, rgba(33,33,33, 0.06) 336px);
+    --dark_bg: radial-gradient(circle at center center, transparent 0%,rgb(33,33,33) 99%),repeating-linear-gradient(90deg, rgba(163, 163, 163,0.2) 0px, rgba(163, 163, 163,0.2) 1px,transparent 1px, transparent 6px),repeating-linear-gradient(180deg, rgba(163, 163, 163,0.2) 0px, rgba(163, 163, 163,0.2) 1px,transparent 1px, transparent 6px),linear-gradient(180deg, rgb(33,33,33),rgb(33,33,33));
+    --light_bg: radial-gradient(circle at center center, transparent 0%,rgba(255,255,255, 0.2) 99%),repeating-linear-gradient(0deg, rgb(225,225,225) 0px, rgb(225,225,225) 1px,transparent 1px, transparent 6px),repeating-linear-gradient(90deg, rgb(225,225,225) 0px, rgb(225,225,225) 1px,transparent 1px, transparent 6px),linear-gradient(90deg, rgba(255,255,255, 0.2),rgba(255,255,255, 0.2));
+
+    font-family: Verdana, Geneva, Tahoma, Arial, sans-serif;
+    background-image: var(--light_bg);
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
@@ -8,9 +12,15 @@
 #header {
     max-height: 10vh;
     min-height: 75px;
+    position: sticky;
+}
+
+#logo {
+    object-fit: contain;
 }
 
 .search {
+    --searchcolor_dark: hsl(0, 0%, 20%);
     --searchcolor: hsl(220, 14%, 90%);
 
     height: 50px;
@@ -40,4 +50,77 @@
 
 #searchicon {
     padding-left: 10px;
+}
+
+.input-box {
+    border: none;
+}
+
+.box {
+    
+    min-width: 240px;       
+    width: 20rem;
+    min-height: 450px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100%;
+    z-index: 1; 
+}
+
+@media (max-width: 768px) {
+    .box {
+        position: fixed;
+        top: 90px; /* Adjust this value based on the height of your navbar */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%; /* Adjust the width as needed */
+        max-width: 450px; /* Optional: set a max-width */
+    }
+}
+
+.box.show {
+    display: block;
+}
+#grid {
+    --transparent_light: rgba(50, 50, 50, 0.8);
+    --transparent_dark: rgba(255, 255, 255, 0.8);
+}
+
+#player {
+
+    --minheight: 800px;
+
+    display: flex;
+    background-color: #1F2937;
+    margin: 0;
+    flex: 1;
+    max-height: 60vh;
+    min-height: var(--minheight);
+    background-color: currentColor;
+}
+
+#video-player {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Adjust as needed */
+    min-height: var(--minheight); /* Adjust as needed */
+    background-color: #000; /* Optional: background color for the container */
+    object-fit: fill;
+}
+
+#video-player{
+    object-fit: contain;
+    min-height: 720px;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    flex: 1;
+}
+
+.thumbn {
+    justify-items: center;
+    align-content: center;
+    background-color: transparent;
+    object-fit: cover;
 }

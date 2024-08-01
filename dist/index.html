@@ -11,53 +11,39 @@
 </head>
 <body id="main">    
 
-    <nav class="bg-gray-100 py-4 flex justify-around items-center" id="header">
+    <nav class="bg-gray-100 py-4 flex justify-around items-center fixed top-0 w-full z-3" id="header">
         <!--<a href="#" class="text-xl font-bold text-gray-700">My Channel</a>-->
-        <img src="/img/mychannel_light.png" alt="logo" class="w-50 h-24" id="logo">
+        <button class="logo-button" onclick="generateVideoGrid(videos)">
+            <img src="/img/mychannel_light.png" alt="logo" class="w-50 h-24" id="logo">
+        </button>
 
         <div class="search">
-            <input type="text" class="border border-gray-300 px-2 py-1 rounded-lg" placeholder="Buscar..." id="searchbar">
+            <input type="text" class="search bg-gray-700 border border-gray-300 px-2 py-1 rounded-lg" placeholder="Buscar..." id="searchbar">
             <button class="search-icon material-symbols-outlined" id="searchicon">search</button>
         </div>
 
-        <ul class="flex" id="buttons">
-            <li class="mr-4">
-                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-900"> account_circle </button>
+        <ul class="flex" id="buttons">          
+            <li class="mr-4 relative">
+                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" onclick="toggleBox(this)"> account_circle </button>
+                <section class="box hidden absolute bg-gray-50 border border-gray-300 p-4 mt-2 shadow-lg justify-center">
+                    <p class="mb-2 ml-[10%] md:ml-0"> Nombre de usuario: </p>
+                    <input type="text" class="input-box bg-neutral-100 outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" placeholder="Usuario" id="user">
+                    <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl mt-2  w-[50%] mx-[25%] md:w-240px md:mx-[25%]" onclick="login()"> Entrar </button>
+                </section>
+            </li>
+            <li class="mr-4 relative">
+                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" onclick="toggleBox(this)"> upload </button>
+                <section class="box hidden absolute bg-gray-50 border border-gray-300 p-4 mt-2 shadow-lg"></section>
             </li>
             <li class="mr-4">
-                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-900"> upload </button>
-            </li>
-            <li class="mr-4">
-                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-900" id="darkbutton" onclick="switchMode()"> dark_mode </button>
+                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" id="darkbutton" onclick="switchMode()"> dark_mode </button>
             </li>
         </ul>
+
     </nav>   
     
-    <div class="container mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            <div class="video">
-                <img src="https://via.placeholder.com/300" alt="Image" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="font-bold text-xl">Video 1</h2>
-                    <p class="text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.</p>
-                </div>
-            </div>
-            <div class="video">
-                <img src="https://via.placeholder.com/300" alt="Image" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="font-bold text-xl">Video 2</h2>
-                    <p class="text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.</p>
-                </div>
-            </div>
-            <div class="video">
-                <img src="https://via.placeholder.com/300" alt="Image" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="font-bold text-xl">Video 3</h2>
-                    <p class="text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.</p>
-                </div>
-            </div>                  
-        </div>
-    </div>        
+    <div id="content">
+    </div> 
     
 </body>
 </html>
