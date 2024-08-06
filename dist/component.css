@@ -1,0 +1,373 @@
+#content.player .material-symbols-outlined {
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+/* section {
+    display: flex;
+    justify-content: center;
+    min-height: calc(100vh - 46px);
+    width: 100%;
+    padding: 1.7%;
+} */
+
+.player-container {
+    --minheight: 800px;
+    display: flex;
+    background-color: black; /* Ctrl + Z*/
+    margin: 0;
+    flex: 1;
+    max-height: 60vh;
+    min-height: var(--minheight);
+    justify-content: center;
+    align-items: center;
+    z-index: inherit;
+}
+
+#content.player {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+#video-player {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: var(--minheight);
+    z-index: inherit;
+}
+
+#main-video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    width: inherit;
+    height: inherit;
+    z-index: inherit;
+}
+#video-player .controls {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    height: 5px;
+    width: 100%;
+    background: hsla(0, 0%, 0%, 0.71);
+    box-shadow: 0 0 40px 10px rgb(0 0 0 / 70%);
+    z-index: 2;
+    transform: translateY(0);
+}
+
+#video-player .controls .progress-area {
+    width: 100%;
+    height: 5px;
+    margin: auto;
+    background: white;
+}
+
+#video-player .progressAreaTime {
+
+    position: absolute;
+    left: var(--x);
+    transform: translateX(-50%);
+    bottom: 70px;
+    min-width: 50px;
+    padding: 10px 10px;
+    color: #fff;
+    font-size: 14px;
+    background: hsl(199, 100%, 10%);
+    border-radius: 5px;
+    z-index: 1;
+    display: none;
+}
+
+#video-player .progressAreaTime::before {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translate(-50%, 50%) rotate(45deg);
+    background: hsl(199, 100%, 10%);
+    width: 15px;
+    height: 15px;
+    z-index: -1;
+}
+
+.controls .progress-area .progress-bar {
+    position: relative;
+    width: 50%;
+    background: rgba(25, 157, 245, 0.815);
+    height: inherit;
+    border-radius: inherit;
+    cursor: pointer;
+}
+
+.controls .progress-area .progress-bar::before {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 45%;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: hsl(192, 96%, 40%);
+}
+
+.controls .controls-list {
+    --border-color: hsl(0, 0%, 0%, 0.6);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%; 
+    min-height: 51px;
+    max-height: 5.5vh;
+    margin: 0;
+    border-width: 0 50px; /* Arreglar el borde donde el fondo no sea negro */
+    border-color: var(--border-color);
+    border-style: solid;
+    background-color: var(--border-color);
+    padding: 0;
+    gap: 0;
+}
+
+.controls .controls-list .controls-left,
+.controls .controls-list .controls-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls .controls-left .timer {
+    font-size: 13px;
+    white-space: nowrap;
+    color: white;
+    margin-left: 5px;
+    text-align: center;
+}
+
+.controls .icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    margin-left: 8px;
+    margin-right: 5px;
+}
+
+.controls .icon .material-symbols-outlined {
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+}
+
+.controls .icon .material-symbols-outlined.fast-rewind:active {
+    transition: 0.2s;
+    transform: rotate(-45deg);
+}
+
+.controls .icon .material-symbols-outlined.fast-forward:active {
+    transition: 0.2s;
+    transform: rotate(45deg);
+}
+
+.controls .icon #volume-range{
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0px;
+    height: 3px;
+    background: white;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    transition: 0.4s;
+}
+
+.controls .icon #volume-range::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    opacity: 0;
+    width: 12px;
+    height: 12px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    background: white;
+    color: white;
+    transition: 0.3s;
+}
+
+.controls .icon #volume-range::-moz-range-thumb {
+    opacity: 0;
+    width: 12px;
+    height: 12px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    background: white;
+    color: white;
+    transition: 0.3s;
+}
+
+.controls .icon:hover #volume-range {
+    display: inline-block;
+    width: 60px;
+}
+
+.controls .icon:hover #volume-range::-webkit-slider-thumb,
+.controls .icon:hover #volume-range::-moz-range-thumb {
+    opacity: 1;
+    pointer-events: auto;
+    transition: 0.5s;
+}
+
+.controls .icon .auto-play {
+    width: 30px;
+    height: 10px;
+    border-radius: 20px;
+    position: relative;
+    margin-right: 8px !important;
+    background: hsl(0, 0%, 71%);
+    transition: 0.3s
+}
+
+.controls .icon .auto-play::before {
+    content: '\e037';
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+    font-size: 14px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background: #727272;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.controls .icon .auto-play.active::before {
+    content: '\e040';
+    left: 15px;
+    font-family: "Material Symbols Outlined";
+}
+
+.controls-right .icon .material-symbols-outlined.settingsButton {
+    font-size: 24px;
+    transition: 0.3s;
+}
+
+.controls-right .icon .settingsButton.active {
+    transform: rotate(45deg);
+}
+
+#video-player #settings {
+    position: absolute;
+    border-radius: 2%;
+    bottom: 62px;
+    right: 25px;
+    background: rgb(28 28 28 / 90%);
+    width: 200px;
+    height: 250px;
+    color: #ffff;
+    overflow-y: scroll;
+    z-index: 20;
+    display: none;
+}
+
+#video-player #settings .playback span {
+    font-size: 14px;
+    font-weight: 300;
+    padding: 15px 30px;
+    display: block;
+    border-bottom: 1px solid rgb(83, 83, 83);    
+}
+
+#video-player #settings .playback ul {
+    position: relative;
+}
+
+#video-player #settings .playback ul li {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    padding: 12px 33px;
+    display: block;
+    font-size: 14px;
+}
+
+#video-player #settings .playback ul li:hover {
+    background: rgba(28, 28, 28, 0.9);
+}
+
+#video-player #settings::-webkit-scrollbar-thumb {
+    height: 20px;
+    border: 2px solid transparent;
+    background: rgba(83, 83, 83, 0.9);
+    border-radius: 20px;
+}
+
+#video-player #settings {
+    scrollbar-color: rgba(83, 83, 83, 0.9) transparent;
+    scrollbar-width: thin;
+}
+
+#video-player #settings .playback ul li.active::before {
+    content: '\e876';
+    font-family: "Material Symbols Outlined";
+    position: absolute;
+    left: 7%;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-right: 10px;
+    font-size: 15px;
+    font-style: bold;
+}
+
+.controls .icon .material-symbols-outlined.fullscreen:active {
+    transition: 0.2s;
+    font-size: 30px;
+}
+
+@media(max-width: 480px){
+    #content.player {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .controls .controls-list {
+        border-width: 0 10px;
+    }
+
+    .controls .icon {
+        margin-left: 5px;
+        margin-right: 5px;
+        font-size: 24px;
+    }
+
+    .volume, .volume-range, .picinpic {
+        display: none;
+    }
+
+    
+}

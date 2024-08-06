@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyChannel</title>
     <script src="script.js"></script>
+    <link rel="icon" href="/img/applogo.ico" />
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="output.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -25,15 +26,32 @@
         <ul class="flex" id="buttons">          
             <li class="mr-4 relative">
                 <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" onclick="toggleBox(this)"> account_circle </button>
-                <section class="box hidden absolute bg-gray-50 border border-gray-300 p-4 mt-2 shadow-lg justify-center">
-                    <p class="mb-2 ml-[10%] md:ml-0"> Nombre de usuario: </p>
-                    <input type="text" class="input-box bg-neutral-100 outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" placeholder="Usuario" id="user">
-                    <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl mt-2  w-[50%] mx-[25%] md:w-240px md:mx-[25%]" onclick="login()"> Entrar </button>
+                <section class="box hidden absolute bg-gray-50 border border-gray-300 rounded-md p-4 mt-2 shadow-lg justify-center">
+
+                    <div class="flex justify-center m-4 mt-1">
+                        <h2 class="text-xl" id="login_header">No has iniciado sesión</h2>
+                    </div>
+
+                    <p class="mb-2 ml-[10%] md:ml-1"> Nombre de usuario: </p>
+                    <input type="text" class="input-box bg-neutral-100 outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" placeholder="Usuario" id="username">
+                    <p class="mt-2 mb-2 ml-[10%] md:ml-1"> Contraseña</p>
+                    <input type="password" class="input-box bg-neutral-100 outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" placeholder="Contraseña" id="password">
+        
+                    <div class="flex mt-3 mb-3 justify-center space-x-4"> 
+                        <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl w-[45%] md:w-[240px]" onclick="login()" id=""> Iniciar Sesion </button>
+                        <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl w-[45%] md:w-[240px]" onclick="register()" id=""> Registrarse </button>
+                    </div>
+
+                    <button class="button-box bg-red-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl ml-[5%] md:ml-0 w-[90%] md:w-[285px]" onclick="logOff()" id=""> Cerrar sesion </button>
+
+                    <div class="mt-4" id="error"></div>
                 </section>
             </li>
             <li class="mr-4 relative">
                 <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" onclick="toggleBox(this)"> upload </button>
-                <section class="box hidden absolute bg-gray-50 border border-gray-300 p-4 mt-2 shadow-lg"></section>
+                <section class="box hidden absolute bg-gray-50 border border-gray-300 rounded-md p-4 mt-2 shadow-lg">
+                    
+                </section>
             </li>
             <li class="mr-4">
                 <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" id="darkbutton" onclick="switchMode()"> dark_mode </button>

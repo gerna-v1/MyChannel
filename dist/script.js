@@ -1,7 +1,7 @@
 const videos = [ // Missing a function that will read all files inside a folder, then create appropiate objects for each video
     {
-        "imageUrl": "/bucket/thumb/thumbnail.jpg",
-        "videoUrl": "/bucket/videos/thumbnail.mp4",
+        "imageUrl": "/bucket/thumb/OMORI-Trailer4.jpg",
+        "videoUrl": "/bucket/videos/OMORI-Trailer4.mp4",
         "title": "Video of a spinning earth",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies.",
         "commentbox": {
@@ -12,14 +12,19 @@ const videos = [ // Missing a function that will read all files inside a folder,
     }
 ]
 
+const database = new Map();
+
 var darkMode = false;
 var openBox = false;
 var lastButton;
 var videoCount = 0;
 
+var currentUser;
+
+
 document.addEventListener("DOMContentLoaded", () => {
     generateVideoGrid(videos);
-  });
+});
 
 const toggleBox = (button) => {
 
@@ -39,28 +44,104 @@ const toggleBox = (button) => {
 
 const playerComponent = (video) => {
     let div = document.querySelector('#content');
+    div.classList.toggle('player');
 
     div.innerHTML = `
-    <div id="player">
-        <video src="${video.videoUrl}" type="video/mp4" id="video-player" style="justify-content: center; align-items: center;">           
-            Your browser does not support the video tag.           
-        </video>
-    </div>
+    <div class="player-container">
+        <div id="video-player">
+            <video src="${video.videoUrl}" type="video/mp4" id="main-video" style="justify-content: center; align-items: center;">           
+                Your browser does not support the video tag.           
+            </video>
 
-    <section class="flex rounded-lg border-solid border-10 border-indigo-600" id="metadata">
-        <div class="w-1/2 h-3/4" id="infobar">
-            <div class="video-title-container text-center content-center text-xl" style="max-width: 50%;">
-                <h1> ${video.title} </h1>
-                <p> ${video.description} </p>
+            <div class="progressAreaTime">0:00</div>
+            
+            <div class="controls">
+                <div class="progress-area">
+                    <div class="progress-bar"></div>
+                    <span></span>
+                </div>                
+
+                <div class="controls-list">
+                    <div class="controls-left">
+                        <span class="icon">
+                            <i class="material-symbols-outlined fast-rewind">replay_10</i>
+                        </span>
+                        <span class="icon">
+                            <i class="material-symbols-outlined play-pause">play_arrow</i>
+                        </span>
+                        <span class="icon">
+                            <i class="material-symbols-outlined fast-forward">forward_10</i>
+                        </span>
+                        <span class="icon">
+                            <i class="material-symbols-outlined volume">volume_up</i>
+                            <input type="range" min="0" max="100" id="volume-range">
+                        </span>
+                        <div class="timer">
+                            <span class="current">00:00</span> / <span class="duration">00:00</span>
+                        </div>
+                    </div>
+                    <div class="controls-right">
+                        <span class="icon">
+                            <i class="material-symbols-outlined auto-play"></i>
+                        </span>
+                        <span class="icon">
+                            <i class="material-symbols-outlined settingsButton">settings</i>
+                        </span>
+                        <span class="icon">
+                            <i class="material-symbols-outlined picinpic">picture_in_picture_alt</i>
+                        </span>
+                        <span class="icon">
+                            <i class="material-symbols-outlined fullscreen">fullscreen</i>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="settings">
+                    <div class="playback">
+                        <span>Velocidad de reproduccion</span>
+                        <ul>
+                            <li data-speed="0.25">0.25</li>
+                            <li data-speed="0.5">0.5</li>
+                            <li data-speed="0.75">0.75</li>
+                            <li data-speed="1" class="active">Normal</li>
+                            <li data-speed="1.25">1.25</li>
+                            <li data-speed="1.5">1.5</li>
+                            <li data-speed="1.75">1.75</li>
+                            <li data-speed="2">2x</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
-        
+    </div>
 
+    <script src="component.js"></script>
+`;
 
-    </section>
-    `;
+    let existingLink = document.querySelector('link[href="component.css"]');
+    if (existingLink) {
+        let newLink = document.createElement('link');
+        newLink.rel = 'stylesheet';
+        newLink.href = 'component.css';
+        document.head.replaceChild(newLink, existingLink);
+    } else {
+        let link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'component.css';
+        document.head.appendChild(link);
+    }
 
-    div.querySelector('#video-player').style = 'justify-content: center; align-items: center;';
+    let existingScript = document.querySelector('#content').querySelector('script[src="component.js"]');
+    if (existingScript) {
+        let newScript = document.createElement('script');
+        newScript.src = 'component.js';
+        document.querySelector('#content').replaceChild(newScript, existingScript);
+    } else {
+        let script = document.createElement('script');
+        script.src = 'component.js';
+        document.querySelector('#content').appendChild(script);
+    }
 
     videoCount = 0;
 }
@@ -138,7 +219,7 @@ const generateVideoGrid = (videos) => {
     if (!containerDiv) {
         containerDiv = document.createElement('div');
         containerDiv.className = 'container mx-auto w-auto';
-        div.innerHTML = ''; // Clear the content div before appending the new container
+        div.innerHTML = ''; 
         div.appendChild(containerDiv);
     }
 
@@ -183,6 +264,194 @@ const generateVideoGrid = (videos) => {
         containerDiv.querySelector('.grid').innerHTML += gridHtml;
     };
 }
+
+const getUser = () => {
+    
+    if(currentUser == null || currentUser == undefined)
+    {
+        console.log(currentUser);
+        
+        return "No has iniciado sesión";
+    }
+    else {
+        return currentUser;
+    }
+
+}
+
+const changeLogin = (user) => {
+    currentUser = String(user);
+
+    let header = document.getElementById('login_header');
+
+    header.innerHTML = `Usuario actual: ${currentUser}`
+}
+
+const login = () => {
+    let user = document.querySelector("#username").value;
+    let password = document.querySelector("#password").value;
+    let errorBox = document.querySelector("#error");
+    let errorMessage = '';
+    let fail = false;
+
+    if(currentUser == user) {
+        errorMessage = 'Ya ha iniciado sesión con esta cuenta';
+        fail = true;
+    }
+    else if (user.trim() == "" || password.trim() == "") {       
+
+        errorMessage = 'Por favor rellene todos los campos'
+        fail = true;
+    }
+    else if (!database.has(user)) {
+
+        errorMessage = 'El usuario no existe';
+        fail = true;
+    }
+
+    if (database.has(user) && database.get(user) !== password.trim())
+    {
+        errorMessage = "Contraseña incorrecta";
+        fail = true;
+    }
+
+    // Esto es para la funcion de registrar
+    if (!fail) {
+        errorBox.innerHTML = errorMessage;
+        changeLogin(user)
+
+        document.querySelector("#username").value = '';
+        document.querySelector("#password").value = '';
+    }
+    else
+    {
+        errorBox.innerHTML = '';
+
+        errorBox.innerHTML =
+        `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: ${errorMessage} </p>
+        </div>`;
+    }
+}
+
+const logOff = () => {
+    let user = currentUser;
+    let errorBox = document.querySelector("#error");
+
+    if (user == undefined || user == null) {
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: No tiene ninguna sesión iniciada </p>
+        </div>`;
+
+        return;
+    }
+
+    currentUser = null;
+    document.getElementById('login_header').innerHTML = getUser();
+}
+
+const register = () => {
+    let user = document.querySelector("#username").value;
+    let password = document.querySelector("#password").value;
+    let errorBox = document.querySelector("#error");
+    let errorMessage = '';
+    let fail = false; 
+
+    if (database.has(user)) {
+        errorMessage = 'El usuario ya existe';
+        fail = true;
+    }
+
+    if (!fail) {
+        database.set(user, password);
+
+        errorBox.innerHTML = errorMessage;
+    } else {
+        errorBox.innerHTML = '';
+
+        errorBox.innerHTML =
+        `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: ${errorMessage} </p>
+        </div>`;
+    }
+}
+
+// Video player functions
+
+const playVideo = () => {
+    play_pause.innerHTML = "pause";
+    play_pause.title = "Reproducir";
+    videoPlayer.classList.add("pause");
+    videoPlayer.classList.remove("replay");
+    mainVideo.play();
+};
+
+const pauseVideo = () => {
+    play_pause.innerHTML = "play_arrow";
+    play_pause.title = "Pausa";
+    videoPlayer.classList.remove("pause");
+    videoPlayer.classList.add("replay");
+    mainVideo.pause();
+};
+
+const toggleRepeat = () => {
+    if (videoPlayer.classList.contains("replay")) {
+        videoPlayer.classList.remove("replay");
+        play_pause.innerHTML = "repeat";
+        play_pause.title = "Repetir";
+    } else {
+        videoPlayer.classList.add("replay");
+        play_pause.innerHTML = "play_arrow";
+        play_pause.title = "Pausa";
+    }
+};
+
+const setDuration = () => {
+    let videoDuration = mainVideo.duration;
+    let totalMinutes = Math.floor(videoDuration / 60);
+    let totalSeconds = Math.floor(videoDuration % 60);
+
+    if (totalSeconds < 10) {
+        totalSeconds = `0${totalSeconds}`;
+    } else {
+        totalSeconds = `${totalSeconds}`;
+    }
+
+    totalDuration.innerHTML = `${totalMinutes}:${totalSeconds}`;
+};
+
+const changeVolume = () => {
+    let volumeValue = volumeRange.value;
+    mainVideo.volume = volumeValue / 100;
+    console.log(`Volume = ${volumeValue}`);
+
+    if (volumeValue == 0) {
+        volume.innerHTML = "volume_off";
+    } else if (volumeValue > 0 && volumeValue <= 50) {
+        volume.innerHTML = "volume_down";
+    } else {
+        volume.innerHTML = "volume_up";
+    }
+};
+
+const muteVolume = () => {
+    let volumeValue = volumeRange.value;
+
+    if (volumeValue == 0) {
+        volumeRange.value = 50;
+        mainVideo.volume = 0.8;
+        volume.innerHTML = "volume_up";
+        console.log("Unmuted");
+    } else {
+        volumeRange.value = 0;
+        mainVideo.volume = 0;
+        volume.innerHTML = "volume_off";
+        console.log("Muted");
+    }
+};
 
 
 

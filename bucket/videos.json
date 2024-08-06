@@ -1,0 +1,13 @@
+[
+    {
+        "imageUrl": "/bucket/thumb/thumbnail.jpg",
+        "videoUrl": "/bucket/videos/thumbnail.mp4",
+        "title": "Video of a spinning earth",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies.",
+        "commentbox": {
+            "username": "user6",
+            "comment": "This isn't not a comment",
+            "likes": 0
+        }
+    }
+]

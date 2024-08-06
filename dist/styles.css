@@ -67,14 +67,14 @@
     z-index: 1; 
 }
 
-@media (max-width: 768px) {
-    .box {
+@media (max-width: 767px) {
+    #box {
         position: fixed;
-        top: 90px; /* Adjust this value based on the height of your navbar */
+        top: 50px; 
         left: 50%;
         transform: translateX(-50%);
-        width: 90%; /* Adjust the width as needed */
-        max-width: 450px; /* Optional: set a max-width */
+        width: 90%; 
+        max-width: 300px; /
     }
 }
 
@@ -103,9 +103,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%; /* Adjust as needed */
-    min-height: var(--minheight); /* Adjust as needed */
-    background-color: #000; /* Optional: background color for the container */
+    width: 100%; 
+    min-height: var(--minheight); 
+    background-color: #000; 
     object-fit: fill;
 }
 
