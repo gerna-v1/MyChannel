@@ -1,3 +1,4 @@
+var content = document.querySelector('#content.player');
 var videoPlayer = document.querySelector('#video-player');
 var mainVideo = videoPlayer.querySelector('#main-video');
 console.log(mainVideo); 
@@ -5,9 +6,9 @@ var progressTime = videoPlayer.querySelector('.progressAreaTime');
 var controls = videoPlayer.querySelector('.controls');
 var progressArea = videoPlayer.querySelector('.progress-area');
 var progressBar = videoPlayer.querySelector(".progress-bar");
-var fastRewind = videoPlayer.querySelector(".fast-rewind");
+var skipPrevious = videoPlayer.querySelector(".skip-previous");
 var play_pause = videoPlayer.querySelector(".play-pause");
-var fastForward = videoPlayer.querySelector(".fast-forward");
+var skipNext = videoPlayer.querySelector(".skip-next");
 var volume = videoPlayer.querySelector(".volume");
 var volumeRange = videoPlayer.querySelector("#volume-range");
 var current = videoPlayer.querySelector(".current");
@@ -59,13 +60,10 @@ play_pause.addEventListener("click", () => {
     }
 });
 
-fastRewind.addEventListener("click", () => {
-    mainVideo.currentTime -= 10;
-});
 
-fastForward.addEventListener("click", () => {
-    mainVideo.currentTime += 10;
-});
+skipPrevious.addEventListener("click", playPreviousVideo);
+
+skipNext.addEventListener("click", playNextVideo);
 
 progressArea.addEventListener("click", (e) => {
     let videoDuration = mainVideo.duration;
@@ -112,6 +110,8 @@ auto_play.addEventListener("click", () => {
         auto_play.title = "Autoreproducción apagada";
     }
 });
+
+mainVideo.addEventListener("ended", playNextVideo);
 
 if ('requestPictureInPicture' in HTMLVideoElement.prototype) {
     picture_in_picture.addEventListener("click", async () => {
