@@ -319,6 +319,10 @@
     border-bottom: 1px solid rgb(83, 83, 83);    
 }
 
+#video-player #settings.active {
+    display: block;
+}
+
 #video-player #settings .playback ul {
     position: relative;
 }

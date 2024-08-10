@@ -8,36 +8,56 @@ const videos = [
             {
                 "username": "user1",
                 "comment": "This is a comment",
-                "likes": 0
+                "likes": 0,
+                "date": getRandomDate()
             },
             {
                 "username": "user2",
                 "comment": "This is not a comment",
-                "likes": 0
+                "likes": 0,
+                "date": getRandomDate()
             },
             {
                 "username": "user3",
                 "comment": "This may be a comment",
-                "likes": 0
+                "likes": 0,
+                "date": getRandomDate()
             },
             {
                 "username": "user4",
                 "comment": "This could be a comment",
-                "likes": 0
+                "likes": 0,
+                "date": getRandomDate()
             },
             {
                 "username": "user5",
                 "comment": "This mayn't be a comment",
-                "likes": 0
+                "likes": 0,
+                "date": getRandomDate()
             },
             {
                 "username": "user6",
                 "comment": "This isn't not a comment",
-                "likes": 0
+                "likes": 0,
+                "date": getRandomDate()
             }
         ]
     }
 ];
+
+function getRandomDate() {
+    const start = new Date(2022, 0, 1);
+    const end = new Date();
+    const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    return randomDate.toLocaleString('en-GB');
+}
+
+function getRandomDate() {
+    const start = new Date(2022, 0, 1);
+    const end = new Date();
+    const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    return randomDate.toLocaleString('en-GB');
+}
 
 const database = new Map();
 
@@ -262,9 +282,10 @@ const playerComponent = (video) => {
             <div class="flex flex-col w-full p-2 h-1/6 comment mt-4 rounded-md ${commentBgColor}">
                 <p class="${titleColor} title text-2xl pl-2">Usuario: ${comment.username}</p>
                 <p class="${descriptionColor} description text-lg bg-gray-5 p-2">${comment.comment}</p>
-                <div class="flex flex-row items-center p-1">
-                    <p class="${descriptionColor} description text-xl bold ml-1 mr-1 like-${index+1}">Likes: ${comment.likes}</p>
+                <div class="flex flex-row items-center w-full p-1">
+                    <p class="${descriptionColor} description text-xl bold ml-1 mr-2 like-${index+1}">Likes: ${comment.likes}</p>
                     <button class="like-button text-xl bold material-symbols-outlined pt-1" onclick="like(${index + 1})" >thumb_up</button>
+                    <p class="${descriptionColor} ml-auto description text-xl bold mr-1 date">${comment.date}</p>
                 </div>
             </div>
         `;
@@ -295,13 +316,13 @@ const playerComponent = (video) => {
             </button>
             <div class="p-4 h-1/6 w-full text-left">
                 <h2 class="font-bold text-xl">${title}</h2>
-                <p class="${commentColor} text-md description">${description}</p>
+                <p class="${commentColor} text-base description">${description}</p>
             </div>
         </div>`;
     });
 
     let commentInput = document.querySelector('#entercomment')
-    commentInput.style.backgroundColor = 'white' // I don't like the searc color for the comment box
+    darkMode ? commentInput.style.backgroundColor = 'var(--searchcolor_dark)' : commentInput.style.backgroundColor = 'white' // I don't like the searc color for the comment box
 
     // Event listeners and dynamic loading
 
@@ -655,9 +676,13 @@ const logOff = () => {
 
         return;
     }
-
+    
     currentUser = null;
     document.getElementById('login_header').innerHTML = getUser();
+
+    if (document.querySelector("#commentuser")) {
+        document.querySelector("#commentuser").innerText = `Usuario: ${getUser()}`
+    }
 }
 
 const register = () => {
@@ -728,10 +753,14 @@ const addComment = () => {
         
         lastCommentIndex++;
 
+        let options = { timeZone: 'America/Caracas', hour12: true };
+        let currentDate = new Date().toLocaleString('en-GB', options);
+
         videos[getCurrentVideo()].commentbox.push({
             "username": getUser(),
             "comment": comment,
-            "likes": 0
+            "likes": 0,
+            "date": currentDate
         });
 
         comments.innerHTML += `
@@ -739,14 +768,14 @@ const addComment = () => {
                 <p class="${titleColor} title text-2xl pl-2">Usuario: ${getUser()}</p>
                 <p class="${descriptionColor} description text-lg bg-gray-5 p-2">${comment}</p>
                 <div class="flex flex-row items-center p-1">
-                <p class="${descriptionColor} description text-xl bold ml-1 mr-1 like-${lastCommentIndex + 1}">Likes: ${videos[getCurrentVideo()].commentbox[lastCommentIndex].likes}</p>
-                <button class="like-button text-xl bold material-symbols-outlined" onclick="like(${lastCommentIndex + 1})" >thumb_up</button>
+                    <p class="${descriptionColor} description text-xl bold ml-1 mr-2 like-${lastCommentIndex + 1}">Likes: ${videos[getCurrentVideo()].commentbox[lastCommentIndex].likes}</p>
+                    <button class="like-button text-xl bold material-symbols-outlined" onclick="like(${lastCommentIndex + 1})" >thumb_up</button>
+                    <p class="${descriptionColor} ml-auto description text-xl bold mr-1 date">${currentDate}</p>                    
                 </div>
             </div>
-            `;
+        `;
 
-
-        comment = '';
+        document.querySelector('#entercomment').value = '';
     }
 };
 
@@ -842,6 +871,11 @@ const setDuration = () => {
     totalDuration.innerHTML = `${totalMinutes}:${totalSeconds}`;
 };
 
+const changeSettings = () => {
+    settings.classList.toggle('active');
+    settingsBtn.classList.toggle('active');
+}
+
 const changeVolume = () => {
     let volumeValue = volumeRange.value;
     mainVideo.volume = volumeValue / 100;
@@ -855,6 +889,24 @@ const changeVolume = () => {
         volume.innerHTML = "volume_up";
     }
 };
+
+const setPosition = (e) => {
+    let videoDuration = mainVideo.duration;
+    let progressValue = progressArea.clientWidth;
+    let clickOffsetX = e.offsetX;
+
+    if (isFinite(videoDuration) && isFinite(progressValue) && isFinite(clickOffsetX)) {
+        mainVideo.currentTime = (clickOffsetX / progressValue) * videoDuration;
+    } else {
+        console.error("Invalid value detected: ", { videoDuration, progressValue, clickOffsetX });
+    }
+};
+
+const remoteActiveClasses = () => {
+    playback.forEach(event => {
+        event.classList.remove("active");
+    })
+}
 
 const muteVolume = () => {
     let volumeValue = volumeRange.value;

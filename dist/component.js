@@ -14,11 +14,11 @@ var volumeRange = videoPlayer.querySelector("#volume-range");
 var current = videoPlayer.querySelector(".current");
 var totalDuration = videoPlayer.querySelector(".duration");
 var auto_play = videoPlayer.querySelector(".auto-play");
+var settings = videoPlayer.querySelector("#settings");
 var settingsBtn = videoPlayer.querySelector(".settingsButton");
+var playback = videoPlayer.querySelectorAll(".playback li");
 var picture_in_picture = videoPlayer.querySelector(".picinpic");
 var fullscreen = videoPlayer.querySelector(".fullscreen");
-var settings = videoPlayer.querySelector("#settings");
-var layback = videoPlayer.querySelectorAll(".playback");
 
 mainVideo.addEventListener("canplay", (e) => {
     console.log("Video cargado");
@@ -65,17 +65,17 @@ skipPrevious.addEventListener("click", playPreviousVideo);
 
 skipNext.addEventListener("click", playNextVideo);
 
-progressArea.addEventListener("click", (e) => {
-    let videoDuration = mainVideo.duration;
-    let progressValue = progressArea.clientWidth;
-    let clickOffsetX = e.offsetX;
-
-    if (isFinite(videoDuration) && isFinite(progressValue) && isFinite(clickOffsetX)) {
-        mainVideo.currentTime = (clickOffsetX / progressValue) * videoDuration;
-    } else {
-        console.error("Invalid value detected: ", { videoDuration, progressValue, clickOffsetX });
-    }
+progressArea.addEventListener("pointerdown", (e) => {
+    setPosition(e);
+    progressArea.addEventListener("pointermove", setPosition);
+    progressArea.addEventListener("pointerup", () => {
+        progressArea.removeEventListener("pointermove", setPosition);
+    });
+    progressArea.addEventListener("pointerleave", () => {
+        progressArea.removeEventListener("pointermove", setPosition);
+    });
 });
+ 
 
 progressArea.addEventListener("mousemove", (e) => {
     let progressValue = progressArea.clientWidth;
@@ -142,6 +142,16 @@ fullscreen.addEventListener("click", () => {
         document.exitFullscreen();
     }
 });
+
+playback.forEach((event)=> {
+    event.addEventListener('click', () => {
+        remoteActiveClasses();
+        event.classList.add("active");
+        let speed = event.getAttribute('data-speed');
+        mainVideo.playbackRate = speed;
+    });
+});
+
 //
 //mainVideo.addEventListener("ended", () => {
 //    if (auto_play.classList.contains("active")) {
@@ -152,6 +162,9 @@ fullscreen.addEventListener("click", () => {
 //    }
 //});
 //
+
+settingsBtn.addEventListener("click", changeSettings)
+
 volumeRange.addEventListener("change", changeVolume);
 
 volume.addEventListener("click", muteVolume);
