@@ -1,3 +1,10 @@
+const getRandomDate = () => {
+    const start = new Date(2022, 0, 1);
+    const end = new Date();
+    const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    return randomDate.toLocaleString('en-GB');
+}
+
 const videos = [
     {
         "imageUrl": "/bucket/thumb/thumbnail.jpg",
@@ -42,19 +49,296 @@ const videos = [
                 "date": getRandomDate()
             }
         ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/freddy.jpg",
+        "videoUrl": "/bucket/videos/Five Nights at Freddy's 2 Song - The Living Tombstone (FNAF2).mp4",
+        "title": "Five Nights at Freddy's 2 Song - The Living Tombstone (FNAF2)",
+        "description": `The Living Tombstone's Five Nights at Freddy's 2 song "It's Been So Long" (FNAF2), inspired by Scott Cawthorne's Five Nights at Freddys series.`,
+        "commentbox": [
+            {
+                "username": "Xx_freddy_lover69_xX",
+                "comment": "I love this song so much!!!1!1!",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/Dream.jpg",
+        "videoUrl": "/bucket/videos/Dream Sweet in Sea Major.mp4",
+        "title": "Dream Sweet in Sea Major",
+        "description": `
+            Alone at the edge of a universe humming a tune
+            For merely dreaming we were snow
+            A siren sounds like the goddess who promises endless apologies of paradise
+            And only she can make it right
+            So things are different tonight`,
+        "commentbox": [
+            {
+                "username": "hayden8923",
+                "comment": "this whole album is a masterpiece",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/luismi.jpg",
+        "videoUrl": "/bucket/videos/Luis Miguel - Mejores Canciones II MIX ROMANTICOS.mp4",
+        "title": "Luis Miguel - Mejores Canciones II MIX ROMANTICOS💕",
+        "description": `#luismiguel
+            "CancioneS ImpuntulaeS...."🎙💖😍
+            OmAr FlOrEs P. MusiC
+
+            Luis Miguel - Mejores Canciones II MIX ROMANTICOS💕`,
+        "commentbox": [
+            {
+                "username": "Carmen Gustavo Pérez",
+                "comment": "mi querdisimo luismi😍😍😍 komo te keria en mi jubentud💕",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/OMORI-Trailer2.jpg",
+        "videoUrl": "/bucket/videos/OMORI-Trailer2.mp4",
+        "title": "OMORI Trailer",
+        "description": "Cinematic trailer for the indie RPG game OMORI, coming soon",
+        "commentbox": [
+            {
+                "username": "Foby Tox",
+                "comment": "the trailer for this game DOES NOT reflect the gameplay☠️☠️",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    
+    {
+        "imageUrl": "/bucket/thumb/hunterxhunter.jpg",
+        "videoUrl": "/bucket/videos/Hunter X Hunter - Opening 1 Departure.mp4",
+        "title": "Hunter X Hunter - Opening 1 | Departure!",
+        "description": `Hunter X Hunter OP 1 "Departure!" by Masatoshi Ono. Watch Hunter X Hunter on Runchycroll! `,
+        "commentbox": [
+            {
+                "username": "男が好きだよ",
+                "comment": "^^ 読む人はゲイです、ハハハハ",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/Broly.jpg",
+        "videoUrl": "/bucket/videos/Dragon Ball Super Broly 1080p Full HD Latam.mp4",
+        "title": "Dragon Ball Super Broly Pelicula Completa Español Latino",
+        "description": `Lo que se muestra en el video no es de mi propiedad créditos a quien corresponda 
+
+        #peliculas #dragonball #broly #dragonballsuper #dragonballlegends`,
+        "commentbox": [
+            {
+                "username": "Nelson sfx",
+                "comment": "Entrar a MyChannel y ver que un crack te subio la película completa, simplemente satisfactorio",
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "Lucas Ezequiel",
+                "comment": "La vi el día que salió en Japón, luego el estreno en argentina, en la escena final del Kamehameha de Gogeta todos en el cine haciendo la gesticulación con las manos y a medida que pronunciaba Gogeta la técnica el público también lo hacía, una auténtica locura, es una mezcla del especial de TV de Bardock, la primer película de broly Z & la de janemba, juntaron lo mejor de esas 3 y salió este peliculón, el soundtrack en las peleas son un deleite, la canción Blizzard una obra de arte, cuando se rompen las dimensiones de tanto poder que estan librando en la batalla es un orgasmo visual, sin dudas es la mejor película de dragon ball de todos los tiempos, tiene de todo, este fue el prime de Super, gracias por subir la película para todos.",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/minero.jpg",
+        "videoUrl": "/bucket/videos/Minecraft -  Minero  ft. StarkinDJ (Parodia de  Torero  de Chayanne).mp4",
+        "title": "Minecraft -  Minero  ft. StarkinDJ (Parodia de  Torero  de Chayanne)",
+        "description": `Like and fap if you want more musicals!
+            (Lyrics and MP3 down here)
+
+            MP3: http://www35.zippyshare.com/v/9572300...
+
+            People involved:
+
+            StarkinDJ for making the base, retouching the voice and be the "actor" in the videos (and to have infinite patience)    / starkindj  
+
+            Mangelrogel for acting very good as a mother:
+            / mangelrogel  
+
+            CreeperPickAxe for lending me his server to do weird testings with 1000 creepers:
+            / creeperpickaxe  
+
+            Me: Song lyrics, scenes director, montage and production of the video. But dont suscribe me D:! `,
+        "commentbox": [
+            {
+                "username": "Eduardo Ulloa",
+                "comment": "Es 2024 y todavía se disfruta este témazo ",
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "sebas7u773",
+                "comment": "Era obligado volver aquí después del especial 10 años",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/Maracaibo.jpg",
+        "videoUrl": "/bucket/videos/Cuando voy pa maracaibo.mp4",
+        "title": "Cuando voy pa Maracaibo",
+        "description": `Maracaibo es unica`,
+        "commentbox": [
+            {
+                "username": "Ely Sanchez",
+                "comment": "Soy Colombiana pero amo a Venezuela. Muchas veces pase por ese puente y me sentía muy hemocionada cuando lo pasaba. Me gusta esa gaita me recordaba cosas hermosa al regresar a mi país en la época de navidad Dios Bendiga ese hermoso país y su gentes",
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "Esdrasy Monica",
+                "comment": "Soy de Colombia, Antioquia, pero que grandes recuerdos me trae estás gaitas, cuando viví en esa linda Maracaibo, uuff en mi corazón por siempre, algún día volveré a visitar está hermosa tierra del sol bendito ",
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "Gisell01d",
+                "comment": "soy hondureña, y aquí escuchando canciones gaitas, junto a mi novio venezolano, hermosa cultura! 🇻🇪",
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "Cesarcarrillo4495",
+                "comment": "Soy peruano, viví 05 hermosos años en la linda e inolvidable Venezuela,  79 al 84, Maracaibo de mis amores, nunca los olvidaré,  Dios los bendiga.  Molleja, los quiero mucho, saludos desde USA.  !!!",
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "yoliyoli7321",
+                "comment": "Nooo importa de que parte de Venezuela seas la gaita la llevamos en el corazón 🇻🇪️",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/fernanelcrack.jpg",
+        "videoUrl": "/bucket/videos/Rap de Fernanfloo.mp4",
+        "title": "Rap de Fernanfloo",
+        "description": `
+            Esta es mi manera de felicitar a Fernanfloo por los 10M (10 millones) de suscriptores en su canal. ¡Felicidades! :D `,
+        "commentbox": [
+            {
+                "username": "Fan de fernan_2019",
+                "comment": "Like si te gusta el chorizo :V XD",
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "FernandoLuna-b5t",
+                "comment": "Hoy cumple 4 años este rolon, alguien mas vino a escucharla por la nostalgia :'D?",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/El martillo.jpg",
+        "videoUrl": "/bucket/videos/El martillo.mp4",
+        "title": "El martillo",
+        "description": `en esa epoca... mmm, nah! no se que decir de nada!
+
+        coooomo limosina???
+
+        Henrique Lazo fue quien dirigió esta locura!!!`,
+        "commentbox": [
+            {
+                "username": "raul Alejandro",
+                "comment": "temazo de unos genios de caracas!!!",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/jovani.jpg",
+        "videoUrl": "/bucket/videos/victor le dice a joel (jovani vazquez).mp4",
+        "title": "victor le dice a joel (jovani vazquez)",
+        "description": "Victor le dice a Joel, montate en mi motora, pero de momento Joel le dice a Victor, desayuna con huevo",
+        "commentbox": [
+            {
+                "username": "Monosinoalense",
+                "comment": "Jovani Vazquez JV",
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/console.jpg",
+        "videoUrl": "/bucket/videos/future gen. consels wii2 ps4 xbox720.mp4",
+        "title": "future gen. consels wii2 ps4 xbox720?",
+        "description": "cool pictures i found plz subscribe or comment",
+        "commentbox": [
+            {
+                "username": "SyriakMC",
+                "comment": `"Ps4... ps4 again... another ps4..."
+
+                Bro might have been a genius`,
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "Cabonated404",
+                "comment": `This now counts as a form of retro futurism`,
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/residentevil2.jpg",
+        "videoUrl": "/bucket/videos/Resident Evil 2 Sony E3 2018.mp4",
+        "title": "Resident Evil 2 Sony E3 2018 Trailer",
+        "description": "Survival is only the beginning. Take a trip to Raccoon City with Resident Evil 2 on PlayStation 4: https://play.st/RE2Store",
+        "commentbox": [
+            {
+                "username": "edgm.24",
+                "comment": "Resident Evil finally going back to it's roots, it's amazing to see after so many years...", 
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
+    },
+    {
+        "imageUrl": "/bucket/thumb/russianbear.jpg",
+        "videoUrl": "/bucket/videos/russianbear.mp4",
+        "title": "Медведь просит есть",
+        "description": "На севере",
+        "commentbox": [
+            {
+                "username": "ThunderAppeal",
+                "comment": "Russian: 'Thats it, good bye.' \nPolar Bear: 'Understandable, have a nice evening.'", 
+                "likes": 0,
+                "date": getRandomDate()
+            },
+            {
+                "username": "RalfWildlife",
+                "comment": "Canada: Polar bears eating people! \nRussia: Polar bears eating from people's hands ️", 
+                "likes": 0,
+                "date": getRandomDate()
+            }
+        ]
     }
 ];
 
-const getRandomDate = () => {
-    const start = new Date(2022, 0, 1);
-    const end = new Date();
-    const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    return randomDate.toLocaleString('en-GB');
-}
-
 const database = new Map();
 
-var shuffledPlaylist = [];
+var secondPlaylist = JSON.parse(JSON.stringify(videos));
 
 var darkMode = false;
 var openBox = false;
@@ -73,13 +357,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const search = () => {
     let input = document.querySelector('#searchbar').value;
-    let filteredVideos = [];
+    secondPlaylist = [];
     videos.forEach(video => {
         if (video.title.trim().toLowerCase().includes(input.trim().toLowerCase())) {
-            filteredVideos.push(video);
+            secondPlaylist.push(video);
         }
     });
-    generateVideoGrid(filteredVideos);
+    generateVideoGrid(secondPlaylist);
     document.querySelector('#searchbar').value = '';
 }
 
@@ -101,6 +385,8 @@ const toggleBox = (button) => {
     lastButton = button;
 
     openBox = box.classList.contains('show');
+
+    document.querySelector("#error").innerHTML = '';
 
     // console.log(`La caja esta ${openBox ? 'abierta' : 'cerrada'}`);
 }
@@ -262,9 +548,21 @@ const playerComponent = (video) => {
 
             <section class="w-[100%] mt-4 md:mt-0 md:w-[30%] h-full p-2 text-2xl">
 
+                <div class="flex flex-row w-full h-12 p-2 ${dataColor} data rounded playlist-select"> <!-- Playlist -->
+
+                    <p class="${titleColor} flex w-[70%] justify-center self-center title text-[1.65rem] font-medium">Lista de reproducción</p>
+
+                    <div class="flex flex-row w-[30%] "> 
+                        <button class="rounded title mx-auto material-symbols-outlined" title="Playlist aleatoria" onclick="shufflePlayList()">shuffle</button>
+                        <button class="rounded title mx-auto material-symbols-outlined" title="Reiniciar playlist" onclick="resetPlaylist(videos)">playlist_play</button>
+                    </div>
+
+                </div>
+
                 <div class="grid grid-cols-1 gap-4 mt-2 justify-items-center playlist">
                     
                 </div>
+                
             </section>
         </div>`;
 
@@ -288,7 +586,7 @@ const playerComponent = (video) => {
 
     lastCommentIndex = video.commentbox.length - 1;
 
-    videos.forEach((video, index) => {
+    secondPlaylist.forEach((video, index) => {
 
         if (video.title.length > 40) {
             title = video.title.substring(0, 20) + '...';
@@ -358,6 +656,127 @@ const playerComponent = (video) => {
 
 const getCurrentVideo = () => {
     return currentVideo;
+}
+
+const resetPlaylist = () => {
+    secondPlaylist = JSON.parse(JSON.stringify(videos));
+
+    if (darkMode) {
+        videoBgColor = "rgba(50, 50, 50, 0.8)";
+        thumbnBgColor = "bg-neutral-800";
+        titleColor = "text-gray-50";
+        commentColor = "text-gray-50";
+    } else {
+        videoBgColor = "rgba(255, 255, 255, 0.8)";
+        thumbnBgColor = "bg-gray-100";
+        titleColor = "text-gray-950";
+        commentColor = "text-gray-700";
+    }
+
+    if (document.querySelector('.playlist')) {
+
+        playlist = document.querySelector('.playlist');
+
+        playlist.innerHTML = '';
+
+        secondPlaylist.forEach((video, index) => {
+
+            if (video.title.length > 40) {
+                title = video.title.substring(0, 20) + '...';
+            }
+            else {
+                title = video.title;
+            };
+    
+            if (video.description.length > 50) {
+                description = video.description.substring(0, 69) + '...';
+            }
+            else {
+                description = video.description;
+            };
+    
+            playlist.innerHTML +=
+            `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
+                <button class="flex justify-center items-center w-full h-56" onClick="openVideo(${index})">
+                    <img src="${video.imageUrl}" alt="Image" class="thumbn w-full h-full object-contain data ${thumbnBgColor}">
+                </button>
+                <div class="p-4 h-1/6 w-full text-left">
+                    <h2 class="font-bold text-xl">${title}</h2>
+                    <p class="${commentColor} text-base description">${description}</p>
+                </div>
+            </div>`;
+        });
+    }
+}
+
+const shufflePlayList = () => {
+    let shuffled = JSON.parse(JSON.stringify(secondPlaylist));
+    let currentIndex = shuffled.length;
+    let temp;
+
+    while (currentIndex !== 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        temp = shuffled[currentIndex];
+        shuffled[currentIndex] = shuffled[randomIndex];
+        shuffled[randomIndex] = temp;
+    }
+
+    secondPlaylist = JSON.parse(JSON.stringify(shuffled));
+
+    let videoBgColor;
+    let thumbnBgColor;
+    let titleColor;
+    let commentColor;
+
+
+    if (darkMode) {
+        videoBgColor = "rgba(50, 50, 50, 0.8)";
+        thumbnBgColor = "bg-neutral-800";
+        titleColor = "text-gray-50";
+        commentColor = "text-gray-50";
+    } else {
+        videoBgColor = "rgba(255, 255, 255, 0.8)";
+        thumbnBgColor = "bg-gray-100";
+        titleColor = "text-gray-950";
+        commentColor = "text-gray-700";
+    }
+
+    if (document.querySelector('.playlist')) {
+
+        playlist = document.querySelector('.playlist');
+
+        playlist.innerHTML = '';
+
+        secondPlaylist.forEach((video, index) => {
+
+            if (video.title.length > 40) {
+                title = video.title.substring(0, 20) + '...';
+            }
+            else {
+                title = video.title;
+            };
+    
+            if (video.description.length > 50) {
+                description = video.description.substring(0, 69) + '...';
+            }
+            else {
+                description = video.description;
+            };
+    
+            playlist.innerHTML +=
+            `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
+                <button class="flex justify-center items-center w-full h-56" onClick="openVideo(${index})">
+                    <img src="${video.imageUrl}" alt="Image" class="thumbn w-full h-full object-contain data ${thumbnBgColor}">
+                </button>
+                <div class="p-4 h-1/6 w-full text-left">
+                    <h2 class="font-bold text-xl">${title}</h2>
+                    <p class="${commentColor} text-base description">${description}</p>
+                </div>
+            </div>`;
+        });
+    }
 }
 
 const switchMode = () => {
@@ -498,7 +917,7 @@ const switchMode = () => {
 }
 
 const openVideo = (index) => {
-    playerComponent(videos[index]);
+    playerComponent(secondPlaylist[index]);
     currentVideo = index;
 }
 
@@ -506,6 +925,8 @@ const generateVideoGrid = (videos) => {
     let div = document.querySelector('#content');
 
     let comments = document.querySelector('.second-content  ');
+
+    secondPlaylist = JSON.parse(JSON.stringify(videos));
 
     if (comments) {
         comments.remove();
@@ -641,8 +1062,15 @@ const login = () => {
 
     // Esto es para la funcion de registrar
     if (!fail) {
-        errorBox.innerHTML = errorMessage;
-        changeLogin(user)
+        errorBox.innerHTML = '';
+
+        errorBox.innerHTML = 
+        `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+            <span class="material-symbols-outlined"> check_circle </span>
+            <p> El inicio de sesión se realizó con éxito </p>
+        </div>`;
+
+        changeLogin(user);
 
         document.querySelector("#username").value = '';
         document.querySelector("#password").value = '';
@@ -671,6 +1099,14 @@ const logOff = () => {
 
         return;
     }
+    else {
+        errorBox.innerHTML = '';
+        errorBox.innerHTML = 
+        `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+            <span class="material-symbols-outlined"> check_circle </span>
+            <p> La sesión fué cerrada con éxito </p>
+        </div>`;
+    }
     
     currentUser = null;
     document.getElementById('login_header').innerHTML = getUser();
@@ -692,13 +1128,19 @@ const register = () => {
         fail = true;
     }
     else if (user.trim() == '' || password.trim() == '') {
-        errorMessage = 'Por favor rellene todos los campos'
+        errorMessage = 'Por favor rellene todos los campos';
+        fail = true;
     }
 
     if (!fail) {
         database.set(user, password);
 
-        errorBox.innerHTML = errorMessage;
+        errorBox.innerHTML = '';
+
+        errorBox.innerHTML = `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+            <span class="material-symbols-outlined"> check_circle </span>
+            <p> El usuario fue registrado exitosamente </p>
+        </div>`;
     } else {
         errorBox.innerHTML = '';
 
@@ -740,13 +1182,16 @@ const addComment = () => {
 
         let titleColor;
         let descriptionColor;
+        let commentBgColor;
         
         if (darkMode) {
             titleColor = "text-gray-50";
             descriptionColor = "text-gray-50";
+            commentBgColor = "bg-neutral-500";
         } else {
             titleColor = "text-gray-950";
             descriptionColor = "text-gray-700";
+            commentBgColor = "bg-gray-200";
         }
         
         lastCommentIndex++;
@@ -762,7 +1207,7 @@ const addComment = () => {
         });
 
         comments.innerHTML += `
-            <div class="flex flex-col w-full p-2 h-1/6 comment mt-4 rounded-md bg-gray-200">
+            <div class="flex flex-col w-full p-2 h-1/6 comment mt-4 rounded-md ${commentBgColor}">
                 <p class="${titleColor} title text-2xl pl-2">Usuario: ${getUser()}</p>
                 <p class="${descriptionColor} description text-lg bg-gray-5 p-2">${comment}</p>
                 <div class="flex flex-row items-center p-1">
@@ -786,11 +1231,11 @@ const keyboardEvents = (e) => {
     switch (e.key) {
         case "ArrowLeft":
             mainVideo.currentTime -= 10;
-            break;
+        break;
 
         case "ArrowRight":
             mainVideo.currentTime += 10;
-            break;
+        break;
 
         case " ":
             if (!isInputField) {
@@ -801,7 +1246,7 @@ const keyboardEvents = (e) => {
 
         default:
             console.log(e.key);
-            break;
+        break;
     }
 }
 
@@ -814,7 +1259,7 @@ const playVideo = () => {
 
 const playNextVideo = () => {
     if (!auto_play.classList.contains("active")) {
-        if (getCurrentVideo() < videos.length - 1) {
+        if (getCurrentVideo() < secondPlaylist.length - 1) {
             openVideo(getCurrentVideo() + 1);
         } else {
             openVideo(0);
@@ -829,7 +1274,7 @@ const playPreviousVideo = () => {
         if (getCurrentVideo() > 0) {
             openVideo(getCurrentVideo() - 1);
         } else {
-            openVideo(videos.length - 1);
+            openVideo(secondPlaylist.length - 1);
         }
     } else {
         playVideo();
@@ -857,7 +1302,8 @@ const toggleRepeat = () => {
 
 const setDuration = () => {
     let videoDuration = mainVideo.duration;
-    let totalMinutes = Math.floor(videoDuration / 60);
+    let totalHours = Math.floor(videoDuration / 3600);
+    let totalMinutes = Math.floor((videoDuration % 3600) / 60);
     let totalSeconds = Math.floor(videoDuration % 60);
 
     if (totalSeconds < 10) {
@@ -866,7 +1312,14 @@ const setDuration = () => {
         totalSeconds = `${totalSeconds}`;
     }
 
-    totalDuration.innerHTML = `${totalMinutes}:${totalSeconds}`;
+    if (totalMinutes < 10) {
+        totalMinutes = `0${totalMinutes}`;
+    } else {
+        totalMinutes = `${totalMinutes}`;
+    }
+
+    let totalDurationString = totalHours > 0 ? `${totalHours}:${totalMinutes}:${totalSeconds}` : `${totalMinutes}:${totalSeconds}`;
+    totalDuration.innerHTML = totalDurationString;
 };
 
 const changeSettings = () => {

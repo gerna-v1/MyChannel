@@ -407,6 +407,10 @@
         min-height: 400px;
     }       
 
+    .playlist-select {
+        height: 4rem;
+    }
+
     .controls .controls-list {
         border-width: 0 10px;
     }

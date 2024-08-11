@@ -31,7 +31,8 @@ if (mainVideo.readyState >= 3) {
 
 mainVideo.addEventListener("timeupdate", (e) => {
     let currentTime = mainVideo.currentTime;
-    let currentMin = Math.floor(currentTime / 60);
+    let currentHours = Math.floor(currentTime / 3600);
+    let currentMin = Math.floor((currentTime % 3600) / 60);
     let currentSec = Math.floor(currentTime % 60);
 
     if (currentSec < 10) {
@@ -40,7 +41,14 @@ mainVideo.addEventListener("timeupdate", (e) => {
         currentSec = `${currentSec}`;
     }
 
-    current.innerHTML = `${currentMin}:${currentSec}`;
+    if (currentMin < 10) {
+        currentMin = `0${currentMin}`;
+    } else {
+        currentMin = `${currentMin}`;
+    }
+
+    let currentTimeString = currentHours > 0 ? `${currentHours}:${currentMin}:${currentSec}` : `${currentMin}:${currentSec}`;
+    current.innerHTML = currentTimeString;
 
     console.log(`Time = ${currentTime}`);
     let videoDuration = e.target.duration;
@@ -85,7 +93,8 @@ progressArea.addEventListener("mousemove", (e) => {
 
     let videoDuration = mainVideo.duration;
     let currentProgress = Math.floor((x / progressValue) * videoDuration);
-    let currentMin = Math.floor(currentProgress / 60);
+    let currentHours = Math.floor(currentProgress / 3600);
+    let currentMin = Math.floor((currentProgress % 3600) / 60);
     let currentSec = Math.floor(currentProgress % 60);
 
     if (currentSec < 10) {
@@ -94,7 +103,14 @@ progressArea.addEventListener("mousemove", (e) => {
         currentSec = `${currentSec}`;
     }
 
-    progressTime.innerHTML = `${currentMin}:${currentSec}`;
+    if (currentMin < 10) {
+        currentMin = `0${currentMin}`;
+    } else {
+        currentMin = `${currentMin}`;
+    }
+
+    let currentTimeString = currentHours > 0 ? `${currentHours}:${currentMin}:${currentSec}` : `${currentMin}:${currentSec}`;
+    progressTime.innerHTML = currentTimeString;
 });
 
 progressArea.addEventListener("mouseleave", () => {
