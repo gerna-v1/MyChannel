@@ -45,14 +45,7 @@ const videos = [
     }
 ];
 
-function getRandomDate() {
-    const start = new Date(2022, 0, 1);
-    const end = new Date();
-    const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    return randomDate.toLocaleString('en-GB');
-}
-
-function getRandomDate() {
+const getRandomDate = () => {
     const start = new Date(2022, 0, 1);
     const end = new Date();
     const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -60,6 +53,8 @@ function getRandomDate() {
 }
 
 const database = new Map();
+
+var shuffledPlaylist = [];
 
 var darkMode = false;
 var openBox = false;
@@ -160,7 +155,7 @@ const playerComponent = (video) => {
                 Your browser does not support the video tag.           
             </video>
 
-            <div class="progressAreaTime">0:00</div>
+            <div class="progressAreaTime non-selectable">0:00</div>
             
             <div class="controls">
                 <div class="progress-area">
@@ -168,7 +163,7 @@ const playerComponent = (video) => {
                     <span></span>
                 </div>                
 
-                <div class="controls-list">
+                <div class="controls-list non-draggable">
                     <div class="controls-left">
                         <span class="icon">
                             <i class="material-symbols-outlined skip-previous">skip_previous</i>
@@ -183,7 +178,7 @@ const playerComponent = (video) => {
                             <i class="material-symbols-outlined volume">volume_up</i>
                             <input type="range" min="0" max="100" id="volume-range">
                         </span>
-                        <div class="timer">
+                        <div class="timer non-selectable">
                             <span class="current">00:00</span> / <span class="duration">00:00</span>
                         </div>
                     </div>
@@ -695,6 +690,9 @@ const register = () => {
     if (database.has(user)) {
         errorMessage = 'El usuario ya existe';
         fail = true;
+    }
+    else if (user.trim() == '' || password.trim() == '') {
+        errorMessage = 'Por favor rellene todos los campos'
     }
 
     if (!fail) {

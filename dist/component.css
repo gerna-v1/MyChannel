@@ -89,6 +89,20 @@
     background: white;
 }
 
+.non-selectable {
+    /* En caso de que algun browser no lo soporte lol */
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.non-draggable {
+    -webkit-user-drag: none;
+}
+
 #video-player .progressAreaTime {
 
     position: absolute;
@@ -106,6 +120,7 @@
 }
 
 #video-player .progressAreaTime::before {
+
     content: '';
     position: absolute;
     bottom: 0px;
@@ -186,6 +201,7 @@
     font-size: 26px;
     color: white;
     cursor: pointer;
+    -webkit-user-drag: none;
 }
 
 .controls .icon .material-symbols-outlined.previous-rewind:active {
@@ -246,7 +262,12 @@
     width: 60px;
 }
 
-.controls .icon:hover #volume-range::-webkit-slider-thumb,
+.controls .icon:hover #volume-range::-webkit-slider-thumb { /* Declarados apartes porque chromium is werid */
+    opacity: 1;
+    pointer-events: auto;
+    transition: 0.5s;
+}
+
 .controls .icon:hover #volume-range::-moz-range-thumb {
     opacity: 1;
     pointer-events: auto;
@@ -369,7 +390,7 @@
     font-size: 30px;
 }
 
-@media(max-width: 720px){
+@media(max-width: 767px){
     #content.player {
         width: 100%;
         min-height: 200px;
