@@ -7,8 +7,8 @@ const getRandomDate = () => {
 
 const videos = [
     {
-        "imageUrl": "/bucket/thumb/thumbnail.jpg",
-        "videoUrl": "/bucket/videos/thumbnail.mp4",
+        "imageUrl": "../bucket/thumb/thumbnail.jpg",
+        "videoUrl": "../bucket/videos/thumbnail.mp4",
         "title": "Video of a spinning earth",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies.",
         "commentbox": [
@@ -520,7 +520,7 @@ const switchMode = () => {
         button.innerHTML = 'light_mode';
         body.style.backgroundImage = dark_background;
         body.style.color = 'white';
-        logo.src = '/img/mychannel_dark.png';
+        logo.src = '../img/mychannel_dark.png';
         header.classList.replace("bg-gray-100", "bg-neutral-800"); 
         searches.forEach( search => {
             search.style.backgroundColor = 'var(--searchcolor_dark)'
@@ -576,7 +576,7 @@ const switchMode = () => {
         darkMode = false;
         body.style.backgroundImage = light_background;
         body.style.color = 'black';
-        logo.src = '/img/mychannel_light.png';
+        logo.src = '../img/mychannel_light.png';
         header.classList.replace("bg-neutral-800", "bg-gray-100");
         searches.forEach( search => {
             search.style.backgroundColor = 'var(--searchcolor)'
