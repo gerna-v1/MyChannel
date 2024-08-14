@@ -150,7 +150,7 @@
 
     #searchbar {
         flex-grow: 1;
-        min-width: 80%;
+        min-width: 70%;
     }
 
     #applogo {
