@@ -555,7 +555,7 @@ const playerComponent = (video) => {
 
                 <div class="flex flex-row w-full h-12 p-2 ${dataColor} data rounded playlist-select"> <!-- Playlist -->
 
-                    <p class="${titleColor} flex w-[70%] justify-center self-center title text-[1.65rem] font-medium">Lista de reproducción</p>
+                    <p class="${titleColor} flex w-[70%] justify-center self-center title text-[1.65rem] font-medium" id="playlist-text">Lista de reproducción</p>
 
                     <div class="flex flex-row w-[30%] "> 
                         <button class="rounded title mx-auto material-symbols-outlined" title="Playlist aleatoria" onclick="shufflePlayList()">shuffle</button>
@@ -786,6 +786,7 @@ const shufflePlayList = () => {
 
 const switchMode = () => {
     let logo = document.getElementById('logo');
+    let applogo = document.querySelector('#applogo') 
     let button = document.querySelector('#darkbutton');
     let body = document.querySelector('body');
     let header = document.querySelector('#header');
@@ -809,7 +810,13 @@ const switchMode = () => {
         button.innerHTML = 'light_mode';
         body.style.backgroundImage = dark_background;
         body.style.color = 'white';
+
+        if (applogo) {
+            applogo.src = './img/applogo_dark.png'
+        }
+
         logo.src = './img/mychannel_dark.png';
+
         header.classList.replace("bg-gray-100", "bg-neutral-800"); 
         searches.forEach( search => {
             search.style.backgroundColor = 'var(--searchcolor_dark)'
@@ -865,7 +872,13 @@ const switchMode = () => {
         darkMode = false;
         body.style.backgroundImage = light_background;
         body.style.color = 'black';
+
+        if (applogo) {
+            applogo.src = './img/applogo.png'
+        }
+
         logo.src = './img/mychannel_light.png';
+
         header.classList.replace("bg-neutral-800", "bg-gray-100");
         searches.forEach( search => {
             search.style.backgroundColor = 'var(--searchcolor)'

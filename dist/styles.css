@@ -25,6 +25,13 @@
     object-fit: contain;
 }
 
+#applogo {
+    object-fit: contain;
+    display: none;
+    width: auto;
+    height: 6rem;
+}
+
 .search {
     --searchcolor_dark: hsl(0, 0%, 20%);
     --searchcolor: hsl(220, 14%, 90%);
@@ -135,5 +142,21 @@
 @media (max-width: 768px) {
     .second-content {
         flex-direction: column;
+    }
+
+    #logo {
+        display: none;
+    }
+
+    #searchbar {
+        flex-grow: 1;
+        min-width: 80%;
+    }
+
+    #applogo {
+        object-fit:cover;
+        display: block;
+        width: 5rem;
+        height: 5rem;
     }
 }

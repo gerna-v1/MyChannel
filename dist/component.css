@@ -390,21 +390,98 @@
     font-size: 30px;
 }
 
-@media(max-width: 767px){
+@media(max-width: 1480px){
+    #playlist-text {
+        font-size: 1.1rem;
+        height: 2rem;
+        padding: 0px;
+        transition: 1s ease-in-out;
+    }
+}
+
+@media(max-width: 1280px){
     #content.player {
+        --maxphoneheight: 50vh;
         width: 100%;
-        min-height: 200px;
+        min-height: var(--maxphoneheight);
         display: flex;
-        justify-content: center;
+        justify-content: center; 
         align-items: center;
     }
     .player-container {
-        min-height: 400px;
-        height: 30vh;
+        min-height: var(--maxphoneheight);
+        max-height: var(--maxphoneheight);
+    }
+
+    #main-video {
+        min-height: var(--maxphoneheight);
     }
         
     #video-player {
-        min-height: 400px;
+        min-height: var(--maxphoneheight);
+        max-height: var(--maxphoneheight);
+    }       
+
+    #playlist-text {
+        font-size: 0.9rem;
+        height: 2rem;
+        padding: 0px;
+        transition: 0.5s ease-in-out;
+    }
+}
+
+@media(max-width: 900px){
+    #content.player {
+        --maxphoneheight: 50vh;
+        width: 100%;
+        min-height: var(--maxphoneheight);
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+    }
+    .player-container {
+        min-height: var(--maxphoneheight);
+        max-height: var(--maxphoneheight);
+    }
+
+    #main-video {
+        min-height: var(--maxphoneheight);
+    }
+        
+    #video-player {
+        min-height: var(--maxphoneheight);
+        max-height: var(--maxphoneheight);
+    }       
+
+    #playlist-text {
+        font-size: 0.75rem;
+        height: 2rem;
+        padding: 0px;
+        transition: 0.3s ease-in-out;
+    }
+}
+
+@media(max-width: 768px){
+    #content.player {
+        --maxphoneheight: 25vh;
+        width: 100%;
+        min-height: var(--maxphoneheight);
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+    }
+    .player-container {
+        min-height: var(--maxphoneheight);
+        max-height: var(--maxphoneheight);
+    }
+
+    #main-video {
+        min-height: var(--maxphoneheight);
+    }
+        
+    #video-player {
+        min-height: var(--maxphoneheight);
+        max-height: var(--maxphoneheight);
     }       
 
     .playlist-select {
@@ -413,6 +490,11 @@
 
     .controls .controls-list {
         border-width: 0 10px;
+    }
+
+    #playlist-text {
+        font-size: 1.8rem;
+        transition: 0.3s ease-in-out;
     }
 
     .controls .icon {
@@ -424,6 +506,5 @@
     .volume, .volume-range, .picinpic {
         display: none;
     }
-
     
 }
