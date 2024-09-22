@@ -1,3 +1,5 @@
+console.log('preload.js loaded');
+
 const getRandomDate = () => {
     const start = new Date(2022, 0, 1);
     const end = new Date();
@@ -5,56 +7,11 @@ const getRandomDate = () => {
     return randomDate.toLocaleString('en-GB');
 }
 
-const videos = [
-    {
-        "imageUrl": "./bucket/thumb/thumbnail.jpg",
-        "videoUrl": "./bucket/videos/thumbnail.mp4",
-        "title": "Video of a spinning earth",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies. Nullam nec purus nec nunc tincidunt ultricies.",
-        "commentbox": [
-            {
-                "username": "user1",
-                "comment": "This is a comment",
-                "likes": 0,
-                "date": getRandomDate()
-            },
-            {
-                "username": "user2",
-                "comment": "This is not a comment",
-                "likes": 0,
-                "date": getRandomDate()
-            },
-            {
-                "username": "user3",
-                "comment": "This may be a comment",
-                "likes": 0,
-                "date": getRandomDate()
-            },
-            {
-                "username": "user4",
-                "comment": "This could be a comment",
-                "likes": 0,
-                "date": getRandomDate()
-            },
-            {
-                "username": "user5",
-                "comment": "This mayn't be a comment",
-                "likes": 0,
-                "date": getRandomDate()
-            },
-            {
-                "username": "user6",
-                "comment": "This isn't not a comment",
-                "likes": 0,
-                "date": getRandomDate()
-            }
-        ]
-    }
-];
 
 const database = new Map();
 
-var secondPlaylist = JSON.parse(JSON.stringify(videos));
+var videos = [];
+var secondPlaylist = JSON.parse(JSON.stringify([]));
 
 var darkMode = false;
 var openBox = false;
@@ -66,9 +23,58 @@ var currentUser;
 var currentVideo = 0;
 var lastCommentIndex = 0;
 
+const loadVideos = async () => {
+    try {
+        const videoList = await window.videoAPI.loadVideos();
+        return videoList;
+    } catch (error) {
+        console.log(error);
+        videos = [];
+    }
+};
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    videos = await loadVideos();
+    secondPlaylist = JSON.parse(JSON.stringify(videos));
     generateVideoGrid(videos);
+
+    document.querySelector('.logo-button').addEventListener('click', () => {
+        generateVideoGrid(videos);
+    });
+
+    document.querySelector('#search-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        search();
+    });
+
+    document.querySelector('#account-button').addEventListener('click', (event) => {
+        toggleBox(event.currentTarget);
+    });
+
+    document.querySelector('#login-button').addEventListener('click', () => {
+        login();
+    });
+
+    document.querySelector('#register-button').addEventListener('click', () => {
+        register();
+    });
+
+    document.querySelector('#logoff-button').addEventListener('click', () => {
+        logOff();
+    });
+
+    document.querySelector('#upload-button').addEventListener('click', (event) => {
+        toggleBox(event.currentTarget);
+    });
+
+    document.querySelector('#upload-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await uploadForm();
+    });
+
+    document.querySelector('#darkbutton').addEventListener('click', () => {
+        switchMode();
+    });
 });
 
 const search = () => {
@@ -84,7 +90,7 @@ const search = () => {
 }
 
 document.addEventListener("keydown", (e) => {
-    
+
     const activeElement = document.activeElement;
     const elementId = activeElement.id;
     const isInputField = activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA';
@@ -94,14 +100,14 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-const toggleBox = (button) => {
+const toggleBox = async (button) => {
 
     if (openBox && lastButton !== button) {
         lastButton.nextElementSibling.classList.toggle('show');
     }
-    
+
     let box = button.nextElementSibling;
-    box.classList.toggle('show');  
+    box.classList.toggle('show');
 
     lastButton = button;
 
@@ -109,7 +115,63 @@ const toggleBox = (button) => {
 
     document.querySelector("#error").innerHTML = '';
 
-    // console.log(`La caja esta ${openBox ? 'abierta' : 'cerrada'}`);
+}
+
+const uploadForm = async () => {
+    const videoFile = document.querySelector('#video-file').files[0];
+    const thumbnailFile = document.querySelector('#thumbnail-file').files[0];
+    const videoTitle = document.querySelector('#video-name').value;
+    const videoDescription = document.querySelector('#video-description').value;
+    const errorBox = document.querySelector('#upload-error');
+
+    if (!videoFile || !thumbnailFile || !videoTitle || !videoDescription) {
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: Por favor rellene todos los campos </p>
+        </div>`;
+        return;
+    }
+
+    try {
+        const videoFileData = await readFileData(videoFile);
+        const thumbnailFileData = await readFileData(thumbnailFile);
+
+        const result = await window.videoAPI.uploadVideo({
+            title: videoTitle,
+            description: videoDescription,
+            videoFileName: videoFile.name,
+            thumbnailFileName: thumbnailFile.name,
+            videoFileData,
+            thumbnailFileData,
+            commentbox: [] // Initialize commentbox as an empty array
+        });
+
+        if (result) {
+            errorBox.innerHTML = `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+                <span class="material-symbols-outlined"> check_circle </span>
+                <p> El video fue subido exitosamente </p>
+            </div>`;
+            videos = await loadVideos();
+            secondPlaylist = JSON.parse(JSON.stringify(videos));
+            generateVideoGrid(videos);
+        } else {
+            throw new Error('Error uploading video');
+        }
+    } catch (error) {
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: ${error.message} </p>
+        </div>`;
+    }
+}
+
+function readFileData(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+    });
 }
 
 const playerComponent = (video) => {
@@ -121,6 +183,8 @@ const playerComponent = (video) => {
     } else {
         div.classList.add("player");
     }
+
+    window.scrollTo(0, 0);
 
     // Not my proudest code tbh
     let dataColor;
@@ -175,11 +239,11 @@ const playerComponent = (video) => {
                         <span class="icon">
                             <i class="material-symbols-outlined skip-previous">skip_previous</i>
                         </span>
-                        <span class="icon">
-                            <i class="material-symbols-outlined play-pause">play_arrow</i>
+                        <span class="icon play-pause material-symbols-outlined">
+                            play_arrow
                         </span>
-                        <span class="icon">
-                            <i class="material-symbols-outlined skip-next">skip_next</i>
+                        <span class="icon skip-next">
+                            <i class="material-symbols-outlined">skip_next</i>
                         </span>
                         <span class="icon">
                             <i class="material-symbols-outlined volume">volume_up</i>
@@ -228,11 +292,9 @@ const playerComponent = (video) => {
     <script src="./dist/component.js"></script>
 `;
 
-    // Comment Box part
-
     let metadata;
 
-    if(!document.querySelector('.metadata')) {
+    if (!document.querySelector('.metadata')) {
         metadata = document.createElement('div');
         metadata.classList.add('metadata');
     }
@@ -257,7 +319,7 @@ const playerComponent = (video) => {
                     <div class="flex flex-col w-full h-1/6 p-4 ${dataColor} data rounded"> <!-- Ingresar comentarios -->
                         <p class="${titleColor} title text-xl" id="commentuser">Usuario: ${getUser()}</p>
                         <textarea class="w-full h-1/6 p-2 rounded mt-4 outline-none search" placeholder="Escribe un comentario..." id="entercomment"></textarea>
-                        <button class="w-full h-1/6 p-2 rounded ${commentButtonBgColor} commentbutton ${titleColor} title mt-4" onclick="addComment()">Comentar</button>
+                        <button class="w-full h-1/6 p-2 rounded ${commentButtonBgColor} commentbutton ${titleColor} title mt-4 add-comment">Comentar</button>
                     </div>
 
                     <div class="flex flex-col w-full rounded-lg ${commentContainerBgColor} commentcontainer p-4 h-5/6 mt-1 mb-3 comments">
@@ -274,8 +336,8 @@ const playerComponent = (video) => {
                     <p class="${titleColor} flex w-[70%] justify-center self-center title text-[1.65rem] font-medium" id="playlist-text">Lista de reproducción</p>
 
                     <div class="flex flex-row w-[30%] "> 
-                        <button class="rounded title mx-auto material-symbols-outlined" title="Playlist aleatoria" onclick="shufflePlayList()">shuffle</button>
-                        <button class="rounded title mx-auto material-symbols-outlined" title="Reiniciar playlist" onclick="resetPlaylist(videos)">playlist_play</button>
+                        <button class="rounded title mx-auto material-symbols-outlined shuffle-playlist" title="Playlist aleatoria">shuffle</button>
+                        <button class="rounded title mx-auto material-symbols-outlined reset-playlist" title="Reiniciar playlist">playlist_play</button>
                     </div>
 
                 </div>
@@ -297,8 +359,8 @@ const playerComponent = (video) => {
                 <p class="${titleColor} title text-2xl pl-2">Usuario: ${comment.username}</p>
                 <p class="${descriptionColor} description text-lg bg-gray-5 p-2">${comment.comment}</p>
                 <div class="flex flex-row items-center w-full p-1">
-                    <p class="${descriptionColor} description text-xl bold ml-1 mr-2 like-${index+1}">Likes: ${comment.likes}</p>
-                    <button class="like-button text-xl bold material-symbols-outlined pt-1" onclick="like(${index + 1})" >thumb_up</button>
+                    <p class="${descriptionColor} description text-xl bold ml-1 mr-2 like-${index + 1}">Likes: ${comment.likes}</p>
+                    <button class="like-button text-xl bold material-symbols-outlined pt-1" data-index="${index + 1}">thumb_up</button>
                     <p class="${descriptionColor} ml-auto description text-xl bold mr-1 date">${comment.date}</p>
                 </div>
             </div>
@@ -324,8 +386,8 @@ const playerComponent = (video) => {
         };
 
         playlist.innerHTML +=
-        `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
-            <button class="flex justify-center items-center w-full h-56" onClick="openVideo(${index})">
+            `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
+            <button class="flex justify-center items-center w-full h-56 open-video" data-index="${index}">
                 <img src="${video.imageUrl}" alt="Image" class="thumbn w-full h-full object-contain data ${thumbnBgColor}">
             </button>
             <div class="p-4 h-1/6 w-full text-left">
@@ -338,9 +400,9 @@ const playerComponent = (video) => {
     let commentInput = document.querySelector('#entercomment')
     darkMode ? commentInput.style.backgroundColor = 'var(--searchcolor_dark)' : commentInput.style.backgroundColor = 'white' // I don't like the searc color for the comment box
 
-    // Event listeners and dynamic loading
+    // Event listeners 
 
-    if(!isKeyboardDownAdded) {
+    if (!isKeyboardDownAdded) {
         document.addEventListener('keydown', keyboardEvents);
     }
     else {
@@ -373,6 +435,26 @@ const playerComponent = (video) => {
     }
 
     videoCount = 0;
+
+    document.querySelectorAll('.open-video').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const index = event.currentTarget.getAttribute('data-index');
+            openVideo(index);
+        });
+    });
+
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const index = event.currentTarget.getAttribute('data-index');
+            like(index);
+        });
+    });
+
+    document.querySelector('.add-comment').addEventListener('click', addComment);
+
+    document.querySelector('.shuffle-playlist').addEventListener('click', shufflePlayList);
+
+    document.querySelector('.reset-playlist').addEventListener('click', () => resetPlaylist(videos));
 }
 
 const getCurrentVideo = () => {
@@ -408,17 +490,17 @@ const resetPlaylist = () => {
             else {
                 title = video.title;
             };
-    
+
             if (video.description.length > 50) {
                 description = video.description.substring(0, 69) + '...';
             }
             else {
                 description = video.description;
             };
-    
+
             playlist.innerHTML +=
-            `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
-                <button class="flex justify-center items-center w-full h-56" onClick="openVideo(${index})">
+                `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
+                <button class="flex justify-center items-center w-full h-56 open-video" data-index="${index}">
                     <img src="${video.imageUrl}" alt="Image" class="thumbn w-full h-full object-contain data ${thumbnBgColor}">
                 </button>
                 <div class="p-4 h-1/6 w-full text-left">
@@ -426,6 +508,13 @@ const resetPlaylist = () => {
                     <p class="${commentColor} text-base description">${description}</p>
                 </div>
             </div>`;
+        });
+
+        document.querySelectorAll('.open-video').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const index = event.currentTarget.getAttribute('data-index');
+                openVideo(index);
+            });
         });
     }
 }
@@ -450,7 +539,6 @@ const shufflePlayList = () => {
     let thumbnBgColor;
     let titleColor;
     let commentColor;
-
 
     if (darkMode) {
         videoBgColor = "rgba(50, 50, 50, 0.8)";
@@ -478,17 +566,17 @@ const shufflePlayList = () => {
             else {
                 title = video.title;
             };
-    
+
             if (video.description.length > 50) {
                 description = video.description.substring(0, 69) + '...';
             }
             else {
                 description = video.description;
             };
-    
+
             playlist.innerHTML +=
-            `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
-                <button class="flex justify-center items-center w-full h-56" onClick="openVideo(${index})">
+                `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
+                <button class="flex justify-center items-center w-full h-56 open-video" data-index="${index}">
                     <img src="${video.imageUrl}" alt="Image" class="thumbn w-full h-full object-contain data ${thumbnBgColor}">
                 </button>
                 <div class="p-4 h-1/6 w-full text-left">
@@ -497,12 +585,19 @@ const shufflePlayList = () => {
                 </div>
             </div>`;
         });
+
+        document.querySelectorAll('.open-video').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const index = event.currentTarget.getAttribute('data-index');
+                openVideo(index);
+            });
+        });
     }
 }
 
 const switchMode = () => {
     let logo = document.getElementById('logo');
-    let applogo = document.querySelector('#applogo') 
+    let applogo = document.querySelector('#applogo')
     let button = document.querySelector('#darkbutton');
     let body = document.querySelector('body');
     let header = document.querySelector('#header');
@@ -533,8 +628,8 @@ const switchMode = () => {
 
         logo.src = './img/mychannel_dark.png';
 
-        header.classList.replace("bg-gray-100", "bg-neutral-800"); 
-        searches.forEach( search => {
+        header.classList.replace("bg-gray-100", "bg-neutral-800");
+        searches.forEach(search => {
             search.style.backgroundColor = 'var(--searchcolor_dark)'
         });
         videos.forEach(video => {
@@ -581,7 +676,7 @@ const switchMode = () => {
             button.classList.replace("bg-gray-400", "bg-gray-600");
         });
 
-        
+
         // document.querySelector('#metadata').style.backgroundColor = 'rgba(50, 50, 50, 0.8)'; BUENISIMO PARA DEBUGEAR EL BORDE, CHEQUEAR LUEGO
     } else {
         button.innerHTML = 'dark_mode';
@@ -596,7 +691,7 @@ const switchMode = () => {
         logo.src = './img/mychannel_light.png';
 
         header.classList.replace("bg-neutral-800", "bg-gray-100");
-        searches.forEach( search => {
+        searches.forEach(search => {
             search.style.backgroundColor = 'var(--searchcolor)'
         });
         videos.forEach(video => {
@@ -605,7 +700,7 @@ const switchMode = () => {
             video.style.color = 'black';
         });
         buttons.forEach(button => {
-            button.classList.replace("text-gray-50", "text-gray-700");         
+            button.classList.replace("text-gray-50", "text-gray-700");
             button.classList.replace("hover:text-gray-400", "hover:text-gray-950")
         });
 
@@ -614,7 +709,7 @@ const switchMode = () => {
             box.classList.replace("border-neutral-950", "border-gray-300");
         });
 
-        if(secondcontent){
+        if (secondcontent) {
             secondcontent.classList.replace("bg-neutral-700", "bg-gray-50");
         }
 
@@ -658,7 +753,7 @@ const openVideo = (index) => {
 const generateVideoGrid = (videos) => {
     let div = document.querySelector('#content');
 
-    let comments = document.querySelector('.second-content  ');
+    let comments = document.querySelector('.second-content');
 
     secondPlaylist = JSON.parse(JSON.stringify(videos));
 
@@ -690,7 +785,7 @@ const generateVideoGrid = (videos) => {
         gridHtml = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 justify-items-center ">';
     }
 
-    darkMode ? bgColor = 'rgba(50, 50, 50, 0.8)' : bgColor = 'rgba(255, 255, 255, 0.8)'; 
+    darkMode ? bgColor = 'rgba(50, 50, 50, 0.8)' : bgColor = 'rgba(255, 255, 255, 0.8)';
     darkMode ? colorClass = "bg-neutral-700" : colorClass = "bg-gray-100";
     darkMode ? commentColor = "text-gray-50" : commentColor = "text-gray-700";
 
@@ -701,14 +796,14 @@ const generateVideoGrid = (videos) => {
     } else {
         videos.forEach((video, index) => {
 
-            if (video.description.length > 69){
+            if (video.description.length > 69) {
                 description = video.description.substring(0, 69) + '...';
             }
             else {
                 description = video.description;
             }
 
-            if (video.title.length > 30){
+            if (video.title.length > 30) {
                 title = video.title.substring(0, 20) + '...';
             }
             else {
@@ -716,8 +811,8 @@ const generateVideoGrid = (videos) => {
             }
 
             gridHtml += `
-                <div class="video flex flex-col items-center w-full" style="background-color: ${bgColor}"   >
-                    <button class="flex justify-center items-center w-full h-48" onClick="openVideo(${index})">
+                <div class="video flex flex-col items-center w-full" style="background-color: ${bgColor}">
+                    <button class="video-thumbnail flex justify-center items-center w-full h-48" data-index="${index}">
                         <img src="${video.imageUrl}" alt="Image" class="thumbn w-full h-full object-fill ${colorClass}">
                     </button>
                     <div class="p-4 h-1/6 w-full text-left">
@@ -736,14 +831,20 @@ const generateVideoGrid = (videos) => {
     if (containerDiv.innerHTML.trim() === '') {
         containerDiv.innerHTML = gridHtml;
     }
-}
+
+    document.querySelectorAll('.video-thumbnail').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const index = event.currentTarget.getAttribute('data-index');
+            openVideo(index);
+        });
+    });
+};
 
 const getUser = () => {
-    
-    if(currentUser == null || currentUser == undefined)
-    {
+
+    if (currentUser == null || currentUser == undefined) {
         console.log(currentUser);
-        
+
         return "No has iniciado sesión";
     }
     else {
@@ -757,10 +858,10 @@ const changeLogin = (user) => {
 
     let header = document.getElementById('login_header');
 
-    header.innerText= `Usuario actual: ${currentUser}`
+    header.innerText = `Usuario actual: ${currentUser}`
 
     let commentUser = document.querySelector('#commentuser');
-    
+
     if (commentUser) {
         commentUser.innerText = `Usuario: ${user}`;
     }
@@ -773,11 +874,11 @@ const login = () => {
     let errorMessage = '';
     let fail = false;
 
-    if(currentUser == user) {
+    if (currentUser == user) {
         errorMessage = 'Ya ha iniciado sesión con esta cuenta';
         fail = true;
     }
-    else if (user.trim() == "" || password.trim() == "") {       
+    else if (user.trim() == "" || password.trim() == "") {
 
         errorMessage = 'Por favor rellene todos los campos'
         fail = true;
@@ -788,8 +889,7 @@ const login = () => {
         fail = true;
     }
 
-    if (database.has(user) && database.get(user) !== password.trim())
-    {
+    if (database.has(user) && database.get(user) !== password.trim()) {
         errorMessage = "Contraseña incorrecta";
         fail = true;
     }
@@ -798,8 +898,8 @@ const login = () => {
     if (!fail) {
         errorBox.innerHTML = '';
 
-        errorBox.innerHTML = 
-        `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+        errorBox.innerHTML =
+            `<div class="text-green-400 hover:text-green-500 text-xl text-center">
             <span class="material-symbols-outlined"> check_circle </span>
             <p> El inicio de sesión se realizó con éxito </p>
         </div>`;
@@ -809,12 +909,11 @@ const login = () => {
         document.querySelector("#username").value = '';
         document.querySelector("#password").value = '';
     }
-    else
-    {
+    else {
         errorBox.innerHTML = '';
 
         errorBox.innerHTML =
-        `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            `<div class="text-red-600 hover:text-red-700 text-xl text-center">
             <span class="material-symbols-outlined"> warning </span>
             <p> ERROR: ${errorMessage} </p>
         </div>`;
@@ -835,13 +934,13 @@ const logOff = () => {
     }
     else {
         errorBox.innerHTML = '';
-        errorBox.innerHTML = 
-        `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+        errorBox.innerHTML =
+            `<div class="text-green-400 hover:text-green-500 text-xl text-center">
             <span class="material-symbols-outlined"> check_circle </span>
             <p> La sesión fué cerrada con éxito </p>
         </div>`;
     }
-    
+
     currentUser = null;
     document.getElementById('login_header').innerHTML = getUser();
 
@@ -855,7 +954,7 @@ const register = () => {
     let password = document.querySelector("#password").value;
     let errorBox = document.querySelector("#error");
     let errorMessage = '';
-    let fail = false; 
+    let fail = false;
 
     if (database.has(user)) {
         errorMessage = 'El usuario ya existe';
@@ -879,7 +978,7 @@ const register = () => {
         errorBox.innerHTML = '';
 
         errorBox.innerHTML =
-        `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            `<div class="text-red-600 hover:text-red-700 text-xl text-center">
             <span class="material-symbols-outlined"> warning </span>
             <p> ERROR: ${errorMessage} </p>
         </div>`;
@@ -889,10 +988,9 @@ const register = () => {
 
 const like = (index) => {
 
-    if(currentUser == null || currentUser == undefined)
-    {
+    if (currentUser == null || currentUser == undefined) {
         console.log("El usuario es", currentUser);
-        
+
         alert("Debe iniciar sesión para poder dar like a un comentario");
     }
     else {
@@ -906,18 +1004,17 @@ const addComment = () => {
     let comment = document.querySelector('#entercomment').value;
     let comments = document.querySelector('.comments');
 
-    if(currentUser == null || currentUser == undefined)
-    {
+    if (currentUser == null || currentUser == undefined) {
         console.log("El usuario es", currentUser);
-        
+
         alert("Debe iniciar sesión para poder comentar");
-    } 
+    }
     else {
 
         let titleColor;
         let descriptionColor;
         let commentBgColor;
-        
+
         if (darkMode) {
             titleColor = "text-gray-50";
             descriptionColor = "text-gray-50";
@@ -927,10 +1024,10 @@ const addComment = () => {
             descriptionColor = "text-gray-700";
             commentBgColor = "bg-gray-200";
         }
-        
+
         lastCommentIndex++;
 
-        let options = { timeZone: 'America/Caracas', hour12: true };
+        let options = { timeZone: 'America/Caracas', hour12: false };
         let currentDate = new Date().toLocaleString('en-GB', options);
 
         videos[getCurrentVideo()].commentbox.push({
@@ -946,13 +1043,20 @@ const addComment = () => {
                 <p class="${descriptionColor} description text-lg bg-gray-5 p-2">${comment}</p>
                 <div class="flex flex-row items-center p-1">
                     <p class="${descriptionColor} description text-xl bold ml-1 mr-2 like-${lastCommentIndex + 1}">Likes: ${videos[getCurrentVideo()].commentbox[lastCommentIndex].likes}</p>
-                    <button class="like-button text-xl bold material-symbols-outlined" onclick="like(${lastCommentIndex + 1})" >thumb_up</button>
+                    <button class="like-button text-xl bold material-symbols-outlined" data-index="${lastCommentIndex + 1}">thumb_up</button>
                     <p class="${descriptionColor} ml-auto description text-xl bold mr-1 date">${currentDate}</p>                    
                 </div>
             </div>
         `;
 
         document.querySelector('#entercomment').value = '';
+
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const index = event.currentTarget.getAttribute('data-index');
+                like(index);
+            });
+        });
     }
 };
 
@@ -965,22 +1069,22 @@ const keyboardEvents = (e) => {
     switch (e.key) {
         case "ArrowLeft":
             mainVideo.currentTime -= 10;
-        break;
+            break;
 
         case "ArrowRight":
             mainVideo.currentTime += 10;
-        break;
+            break;
 
         case " ":
             if (!isInputField) {
                 e.preventDefault();
                 mainVideo.paused ? playVideo() : pauseVideo();
             }
-        break;
+            break;
 
         default:
             console.log(e.key);
-        break;
+            break;
     }
 }
 

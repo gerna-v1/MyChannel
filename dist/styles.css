@@ -46,6 +46,12 @@
     background-color: var(--searchcolor);
 }
 
+#search-form {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
 #searchbar {
     flex: 1;
     width: 100%;
@@ -54,15 +60,19 @@
     border-radius: 25px;
     background-color: transparent;
     outline: none;
-    color: var(--searchcolor - 1);
+    color: var(--searchcolor_dark);
 }
 
 #searchbar::placeholder {
-    color: var(--searchcolor - 1);
+    color: var(--searchcolor_dark);
 }
 
 #searchicon {
     padding-left: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--searchcolor_dark);
 }
 
 .input-box {

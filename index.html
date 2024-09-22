@@ -9,57 +9,85 @@
     <link rel="stylesheet" href="./dist/styles.css">
     <link rel="stylesheet" href="./dist/output.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'self';">
 </head>
 <body id="main">    
 
-    <nav class="bg-gray-100 py-4 flex justify-around items-center fixed top-0 w-full z-10" id="header">
-        <!--<a href="#" class="text-xl font-bold text-gray-700">My Channel</a>-->
-        <button class="logo-button" onclick="generateVideoGrid(videos)">
+    <nav class="bg-gray-100 py-4 flex justify-around items-center w-full z-10" id="header">
+        <button class="logo-button">
             <img src="./img/mychannel_light.png" alt="logo" class="w-50 h-24" id="logo">
             <img src="./img/applogo.png" alt="logo" id="applogo">
         </button>
-
+    
         <div class="search">
-            <input type="text" class="search bg-gray-700 border border-gray-300 px-2 py-1 rounded-lg" placeholder="Buscar..." id="searchbar">
-            <button class="search-icon material-symbols-outlined" id="searchicon" onclick="search()">search</button>
+            <form id="search-form">
+                <input type="text" class="search bg-gray-700 border border-gray-300 px-2 py-1 rounded-lg" placeholder="Buscar..." id="searchbar">
+                <button type="submit" class="search-icon material-symbols-outlined" id="searchicon">search</button>
+            </form>
         </div>
-
+    
         <ul class="flex" id="buttons">          
             <li class="mr-4 relative">
-                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" onclick="toggleBox(this)"> account_circle </button>
+                <button class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" id="account-button"> account_circle </button>
                 <section class="box hidden absolute bg-gray-50 border border-gray-300 rounded-md p-4 mt-2 shadow-lg justify-center">
-
                     <div class="flex justify-center m-4 mt-1">
                         <h2 class="text-xl" id="login_header">No has iniciado sesión</h2>
                     </div>
-
+    
                     <p class="mb-2 ml-[10%] md:ml-1"> Nombre de usuario: </p>
-                    <input type="text" class="input-box bg-neutral-100 search outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" placeholder="Usuario" id="username" autocomplete="off" >
+                    <input type="text" class="input-box bg-neutral-100 search outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" placeholder="Usuario" id="username" autocomplete="off">
                     <p class="mt-2 mb-2 ml-[10%] md:ml-1"> Contraseña</p>
                     <input type="password" class="input-box bg-neutral-100 search outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" placeholder="Contraseña" id="password" autocomplete="off">
-        
+    
                     <div class="flex mt-3 mb-3 justify-center space-x-4"> 
-                        <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl w-[45%] md:w-[240px]" onclick="login()" id=""> Iniciar Sesion </button>
-                        <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl w-[45%] md:w-[240px]" onclick="register()" id=""> Registrarse </button>
+                        <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl w-[45%] md:w-[240px]" id="login-button"> Iniciar Sesion </button>
+                        <button class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl w-[45%] md:w-[240px]" id="register-button"> Registrarse </button>
                     </div>
-
-                    <button class="button-box bg-red-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl ml-[5%] md:ml-0 w-[90%] md:w-[285px]" onclick="logOff()" id=""> Cerrar sesion </button>
-
+    
+                    <button class="button-box bg-red-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl ml-[5%] md:ml-0 w-[90%] md:w-[285px]" id="logoff-button"> Cerrar sesion </button>
+    
                     <div class="mt-4" id="error"></div>
                 </section>
             </li>
             <li class="mr-4 relative">
-                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" onclick="toggleBox(this)"> upload </button>
-                <section class="box hidden absolute bg-gray-50 border border-gray-300 rounded-md p-4 mt-2 shadow-lg">
-                    
+                <button class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" id="upload-button"> upload </button>
+                <section class="box hidden absolute bg-gray-50 border border-gray-300 rounded-md p-4 mt-2 shadow-lg justify-center" id="upload-box">
+                    <form id="upload-form" class="flex flex-col space-y-4">
+                        <div class="flex justify-center m-4 mt-1">
+                            <h2 class="text-xl">Subir Video</h2>
+                        </div>
+            
+                        <label for="video-file" class="mb-2 ml-[10%] md:ml-1">Archivo de video:</label>
+                        <input type="file" class="input-box bg-neutral-100 search outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" id="video-file" accept="video/*" required>
+            
+                        <label for="thumbnail-file" class="mt-2 mb-2 ml-[10%] md:ml-1">Miniatura:</label>
+                        <input type="file" class="input-box bg-neutral-100 search outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" id="thumbnail-file" accept="image/*" required>
+            
+                        <label for="video-name" class="mt-2 mb-2 ml-[10%] md:ml-1">Nombre del video:</label>
+                        <input type="text" class="input-box bg-neutral-100 search outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" id="video-name" placeholder="Nombre del video" required>
+            
+                        <label for="video-description" class="mt-2 mb-2 ml-[10%] md:ml-1">Descripción:</label>
+                        <textarea class="input-box bg-neutral-100 search outline-none px-2 py-2 rounded-lg min-w-[80%] ml-[10%] md:min-w-full md:ml-0" id="video-description" placeholder="Descripción del video" required></textarea>
+            
+                        <div class="flex mt-3 mb-3 justify-center space-x-4"> 
+                            <button type="submit" class="button-box bg-blue-500 text-neutral-100 hover:text-neutral-200 px-2 py-2 rounded-xl w-[45%] md:w-[240px]">Subir</button>
+                        </div>
+            
+                        <div class="mt-4" id="upload-error"></div>
+                    </form>
                 </section>
             </li>
             <li class="mr-4">
-                <button href="#" class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" id="darkbutton" onclick="switchMode()"> dark_mode </button>
+                <button class="search-icon material-symbols-outlined text-gray-700 hover:text-gray-950" id="darkbutton"> dark_mode </button>
             </li>
         </ul>
-
     </nav>   
+    
+    <div id="content"></div> 
+    
+    <script src="script.js"></script>
+    </body>
+    </html>
     
     <div id="content">
     </div> 
