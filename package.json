@@ -1,6 +1,6 @@
 {
   "name": "mychannel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Media player app called MyChannel",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "electron": "^32.1.0",
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.2"
   },
   "config": {
     "forge": "./forge.config.js"
@@ -45,8 +45,13 @@
       "preload.js",
       "img/*",
       "img/applogo.*",
-      "index.html",
-      "bucket/**/*"
+      "index.html"
+    ],
+    "extraResources": [
+      {
+        "from": "bucket",
+        "to": "bucket"
+      }
     ],
     "win": {
       "icon": "img/applogo.ico"

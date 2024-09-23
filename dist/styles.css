@@ -44,12 +44,14 @@
     padding: 14px;
     border-radius: 25px;
     background-color: var(--searchcolor);
+    color: var(--searchcolor_dark);
 }
 
 #search-form {
     display: flex;
     width: 100%;
     align-items: center;
+    background-color: transparent;
 }
 
 #searchbar {
@@ -60,11 +62,10 @@
     border-radius: 25px;
     background-color: transparent;
     outline: none;
-    color: var(--searchcolor_dark);
 }
 
 #searchbar::placeholder {
-    color: var(--searchcolor_dark);
+    color: inherit;
 }
 
 #searchicon {
@@ -72,7 +73,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--searchcolor_dark);
 }
 
 .input-box {

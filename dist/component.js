@@ -22,6 +22,7 @@ var fullscreen = videoPlayer.querySelector(".fullscreen");
 
 mainVideo.addEventListener("canplay", (e) => {
     console.log("Video cargado");
+    mainVideo.volume = 0.5;
     setDuration();
 });
 

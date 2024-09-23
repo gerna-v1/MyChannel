@@ -8,17 +8,6 @@ module.exports = {
   rebuildConfig: {},
   makers: [
     {
-      name: '@electron-forge/maker-squirrel',
-      config: {
-        name: 'MyChannel',
-        setupExe: 'MyChannelSetup.exe',
-        setupIcon: './img/applogo.ico',
-        noMsi: true,
-        remoteReleases: '',
-        remoteToken: '',
-      },
-    },
-    {
       name: '@electron-forge/maker-zip',
       config: {},
     },

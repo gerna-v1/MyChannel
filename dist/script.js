@@ -7,9 +7,6 @@ const getRandomDate = () => {
     return randomDate.toLocaleString('en-GB');
 }
 
-
-const database = new Map();
-
 var videos = [];
 var secondPlaylist = JSON.parse(JSON.stringify([]));
 
@@ -133,26 +130,40 @@ const uploadForm = async () => {
     }
 
     try {
-        const videoFileData = await readFileData(videoFile);
-        const thumbnailFileData = await readFileData(thumbnailFile);
+        let videoFileData, thumbnailFileData;
 
-        const result = await window.videoAPI.uploadVideo({
+        try {
+            videoFileData = await readFileData(videoFile);
+        } catch (error) {
+            throw new Error(`Error reading video file: ${error.message}`);
+        }
+
+        console.log(videoFileData);
+
+        try {
+            thumbnailFileData = await readFileData(thumbnailFile);
+        } catch (error) {
+            throw new Error(`Error reading thumbnail file: ${error.message}`);
+        }
+
+        console.log(thumbnailFileData);
+
+        const success = await window.videoAPI.uploadVideo({
             title: videoTitle,
             description: videoDescription,
             videoFileName: videoFile.name,
             thumbnailFileName: thumbnailFile.name,
             videoFileData,
             thumbnailFileData,
-            commentbox: [] // Initialize commentbox as an empty array
+            commentbox: []
         });
 
-        if (result) {
+        if (success) {
             errorBox.innerHTML = `<div class="text-green-400 hover:text-green-500 text-xl text-center">
                 <span class="material-symbols-outlined"> check_circle </span>
                 <p> El video fue subido exitosamente </p>
             </div>`;
-            videos = await loadVideos();
-            secondPlaylist = JSON.parse(JSON.stringify(videos));
+            videos = await window.videoAPI.loadVideos();
             generateVideoGrid(videos);
         } else {
             throw new Error('Error uploading video');
@@ -163,7 +174,7 @@ const uploadForm = async () => {
             <p> ERROR: ${error.message} </p>
         </div>`;
     }
-}
+};
 
 function readFileData(file) {
     return new Promise((resolve, reject) => {
@@ -247,7 +258,7 @@ const playerComponent = (video) => {
                         </span>
                         <span class="icon">
                             <i class="material-symbols-outlined volume">volume_up</i>
-                            <input type="range" min="0" max="100" id="volume-range">
+                            <input type="range" min="0" max="100" id="volume-range" value="50">
                         </span>
                         <div class="timer non-selectable">
                             <span class="current">00:00</span> / <span class="duration">00:00</span>
@@ -318,7 +329,7 @@ const playerComponent = (video) => {
 
                     <div class="flex flex-col w-full h-1/6 p-4 ${dataColor} data rounded"> <!-- Ingresar comentarios -->
                         <p class="${titleColor} title text-xl" id="commentuser">Usuario: ${getUser()}</p>
-                        <textarea class="w-full h-1/6 p-2 rounded mt-4 outline-none search" placeholder="Escribe un comentario..." id="entercomment"></textarea>
+                        <textarea class="w-full h-1/6 p-2 rounded mt-4 outline-none search ${commentColor}" placeholder="Escribe un comentario..." id="entercomment"></textarea>
                         <button class="w-full h-1/6 p-2 rounded ${commentButtonBgColor} commentbutton ${titleColor} title mt-4 add-comment">Comentar</button>
                     </div>
 
@@ -631,6 +642,7 @@ const switchMode = () => {
         header.classList.replace("bg-gray-100", "bg-neutral-800");
         searches.forEach(search => {
             search.style.backgroundColor = 'var(--searchcolor_dark)'
+            search.style.color = 'var(--searchcolor)';
         });
         videos.forEach(video => {
             video.style.backgroundColor = 'rgba(50, 50, 50, 0.8)';
@@ -693,6 +705,7 @@ const switchMode = () => {
         header.classList.replace("bg-neutral-800", "bg-gray-100");
         searches.forEach(search => {
             search.style.backgroundColor = 'var(--searchcolor)'
+            search.style.color = 'var(--searchcolor_dark)';
         });
         videos.forEach(video => {
             video.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
@@ -746,6 +759,9 @@ const switchMode = () => {
 }
 
 const openVideo = (index) => {
+    console.log("Opening video at index:", index);
+    console.log("Second playlist:", secondPlaylist);
+    console.log("Video at index:", secondPlaylist[index]);
     playerComponent(secondPlaylist[index]);
     currentVideo = index;
 }
@@ -867,182 +883,177 @@ const changeLogin = (user) => {
     }
 }
 
-const login = () => {
+const login = async () => {
     let user = document.querySelector("#username").value;
     let password = document.querySelector("#password").value;
     let errorBox = document.querySelector("#error");
-    let errorMessage = '';
-    let fail = false;
 
     if (currentUser == user) {
-        errorMessage = 'Ya ha iniciado sesión con esta cuenta';
-        fail = true;
-    }
-    else if (user.trim() == "" || password.trim() == "") {
-
-        errorMessage = 'Por favor rellene todos los campos'
-        fail = true;
-    }
-    else if (!database.has(user)) {
-
-        errorMessage = 'El usuario no existe';
-        fail = true;
-    }
-
-    if (database.has(user) && database.get(user) !== password.trim()) {
-        errorMessage = "Contraseña incorrecta";
-        fail = true;
-    }
-
-    // Esto es para la funcion de registrar
-    if (!fail) {
-        errorBox.innerHTML = '';
-
-        errorBox.innerHTML =
-            `<div class="text-green-400 hover:text-green-500 text-xl text-center">
-            <span class="material-symbols-outlined"> check_circle </span>
-            <p> El inicio de sesión se realizó con éxito </p>
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: Ya ha iniciado sesión con esta cuenta </p>
         </div>`;
+        return;
+    }
 
+    if (user == '' || password == '') {
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: Debe llenar ambos campos </p>
+        </div>`;
+        return;
+    }
+
+    const response = await window.loginAPI.loginUser(user, password);
+
+    if (response.success) {
+        errorBox.innerHTML = `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+            <span class="material-symbols-outlined"> check_circle </span>
+            <p> ${response.message} </p>
+        </div>`;
         changeLogin(user);
-
         document.querySelector("#username").value = '';
         document.querySelector("#password").value = '';
-    }
-    else {
-        errorBox.innerHTML = '';
-
-        errorBox.innerHTML =
-            `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+    } else {
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
             <span class="material-symbols-outlined"> warning </span>
-            <p> ERROR: ${errorMessage} </p>
+            <p> ERROR: ${response.message} </p>
         </div>`;
     }
 }
 
-const logOff = () => {
-    let user = currentUser;
+const logOff = async () => {
     let errorBox = document.querySelector("#error");
 
-    if (user == undefined || user == null) {
+    if (currentUser == undefined || currentUser == null) {
         errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
             <span class="material-symbols-outlined"> warning </span>
             <p> ERROR: No tiene ninguna sesión iniciada </p>
         </div>`;
-
         return;
     }
-    else {
-        errorBox.innerHTML = '';
-        errorBox.innerHTML =
-            `<div class="text-green-400 hover:text-green-500 text-xl text-center">
+
+    const response = await window.loginAPI.logoffUser();
+
+    if (response.success) {
+        errorBox.innerHTML = `<div class="text-green-400 hover:text-green-500 text-xl text-center">
             <span class="material-symbols-outlined"> check_circle </span>
-            <p> La sesión fué cerrada con éxito </p>
+            <p> ${response.message} </p>
         </div>`;
-    }
-
-    currentUser = null;
-    document.getElementById('login_header').innerHTML = getUser();
-
-    if (document.querySelector("#commentuser")) {
-        document.querySelector("#commentuser").innerText = `Usuario: ${getUser()}`
+        currentUser = null;
+        document.getElementById('login_header').innerHTML = 'Usuario actual: Ninguno';
+        if (document.querySelector("#commentuser")) {
+            document.querySelector("#commentuser").innerText = `Usuario: Ninguno`;
+        }
     }
 }
 
-const register = () => {
+const register = async () => {
     let user = document.querySelector("#username").value;
     let password = document.querySelector("#password").value;
     let errorBox = document.querySelector("#error");
-    let errorMessage = '';
-    let fail = false;
 
-    if (database.has(user)) {
-        errorMessage = 'El usuario ya existe';
-        fail = true;
-    }
-    else if (user.trim() == '' || password.trim() == '') {
-        errorMessage = 'Por favor rellene todos los campos';
-        fail = true;
+    if (currentUser == user) {
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: Ya ha iniciado sesión con esta cuenta </p>
+        </div>`;
+        return;
     }
 
-    if (!fail) {
-        database.set(user, password);
+    if (user == '' || password == '') {
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+            <span class="material-symbols-outlined"> warning </span>
+            <p> ERROR: Debe llenar ambos campos </p>
+        </div>`;
+        return;
+    }
 
-        errorBox.innerHTML = '';
+    const response = await window.loginAPI.registerUser(user, password);
 
+    if (response.success) {
         errorBox.innerHTML = `<div class="text-green-400 hover:text-green-500 text-xl text-center">
             <span class="material-symbols-outlined"> check_circle </span>
-            <p> El usuario fue registrado exitosamente </p>
+            <p> ${response.message} </p>
         </div>`;
     } else {
-        errorBox.innerHTML = '';
-
-        errorBox.innerHTML =
-            `<div class="text-red-600 hover:text-red-700 text-xl text-center">
+        errorBox.innerHTML = `<div class="text-red-600 hover:text-red-700 text-xl text-center">
             <span class="material-symbols-outlined"> warning </span>
-            <p> ERROR: ${errorMessage} </p>
+            <p> ERROR: ${response.message} </p>
         </div>`;
     }
 }
 
 
-const like = (index) => {
-
+const like = async (index) => {
     if (currentUser == null || currentUser == undefined) {
         console.log("El usuario es", currentUser);
-
         alert("Debe iniciar sesión para poder dar like a un comentario");
+        return;
     }
-    else {
-        videos[currentVideo].commentbox[index - 1].likes++;
-        document.querySelector(`.like-${index}`).innerHTML = `Likes: ${videos[currentVideo].commentbox[index - 1].likes}`;
-        console.log(videos[currentVideo].commentbox[index - 1].likes);
-    }
-}
 
-const addComment = () => {
-    let comment = document.querySelector('#entercomment').value;
+    const videoIndex = getCurrentVideo();
+    const commentIndex = index - 1;
+
+    const likeCount = await window.videoAPI.updateLike(videoIndex, commentIndex);
+
+    if (likeCount !== null) {
+        videos[videoIndex].commentbox[commentIndex].likes = likeCount;
+        document.querySelector(`.like-${index}`).innerHTML = `Likes: ${likeCount}`;
+        console.log(likeCount);
+    } else {
+        alert('Error updating like');
+    }
+};
+
+const addComment = async () => {
+    let commentText = document.querySelector('#entercomment').value;
     let comments = document.querySelector('.comments');
 
     if (currentUser == null || currentUser == undefined) {
         console.log("El usuario es", currentUser);
-
         alert("Debe iniciar sesión para poder comentar");
+        return;
     }
-    else {
 
-        let titleColor;
-        let descriptionColor;
-        let commentBgColor;
+    let titleColor;
+    let descriptionColor;
+    let commentBgColor;
 
-        if (darkMode) {
-            titleColor = "text-gray-50";
-            descriptionColor = "text-gray-50";
-            commentBgColor = "bg-neutral-500";
-        } else {
-            titleColor = "text-gray-950";
-            descriptionColor = "text-gray-700";
-            commentBgColor = "bg-gray-200";
-        }
+    if (darkMode) {
+        titleColor = "text-gray-50";
+        descriptionColor = "text-gray-50";
+        commentBgColor = "bg-neutral-500";
+    } else {
+        titleColor = "text-gray-950";
+        descriptionColor = "text-gray-700";
+        commentBgColor = "bg-gray-200";
+    }
 
-        lastCommentIndex++;
+    lastCommentIndex++;
 
-        let options = { timeZone: 'America/Caracas', hour12: false };
-        let currentDate = new Date().toLocaleString('en-GB', options);
+    let options = { timeZone: 'America/Caracas', hour12: false };
+    let currentDate = new Date().toLocaleString('en-GB', options);
 
-        videos[getCurrentVideo()].commentbox.push({
-            "username": getUser(),
-            "comment": comment,
-            "likes": 0,
-            "date": currentDate
-        });
+    const comment = {
+        "username": getUser(),
+        "comment": commentText,
+        "likes": 0,
+        "date": currentDate
+    };
+
+    const videoIndex = getCurrentVideo();
+    const success = await window.videoAPI.addComment(videoIndex, comment);
+
+    if (success) {
+        videos[videoIndex].commentbox.push(comment);
 
         comments.innerHTML += `
             <div class="flex flex-col w-full p-2 h-1/6 comment mt-4 rounded-md ${commentBgColor}">
                 <p class="${titleColor} title text-2xl pl-2">Usuario: ${getUser()}</p>
-                <p class="${descriptionColor} description text-lg bg-gray-5 p-2">${comment}</p>
+                <p class="${descriptionColor} description text-lg bg-gray-5 p-2">${commentText}</p>
                 <div class="flex flex-row items-center p-1">
-                    <p class="${descriptionColor} description text-xl bold ml-1 mr-2 like-${lastCommentIndex + 1}">Likes: ${videos[getCurrentVideo()].commentbox[lastCommentIndex].likes}</p>
+                    <p class="${descriptionColor} description text-xl bold ml-1 mr-2 like-${lastCommentIndex + 1}">Likes: ${comment.likes}</p>
                     <button class="like-button text-xl bold material-symbols-outlined" data-index="${lastCommentIndex + 1}">thumb_up</button>
                     <p class="${descriptionColor} ml-auto description text-xl bold mr-1 date">${currentDate}</p>                    
                 </div>
@@ -1057,6 +1068,8 @@ const addComment = () => {
                 like(index);
             });
         });
+    } else {
+        alert('Hubo un error agregando el comentario, intente más tarde');
     }
 };
 
@@ -1097,8 +1110,8 @@ const playVideo = () => {
 
 const playNextVideo = () => {
     if (!auto_play.classList.contains("active")) {
-        if (getCurrentVideo() < secondPlaylist.length - 1) {
-            openVideo(getCurrentVideo() + 1);
+        if (Number(getCurrentVideo()) < secondPlaylist.length - 1) {
+            openVideo(Number(getCurrentVideo()) + 1);
         } else {
             openVideo(0);
         }
@@ -1109,8 +1122,8 @@ const playNextVideo = () => {
 
 const playPreviousVideo = () => {
     if (!auto_play.classList.contains("active")) {
-        if (getCurrentVideo() > 0) {
-            openVideo(getCurrentVideo() - 1);
+        if (Number(getCurrentVideo()) > 0) {
+            openVideo(Number(getCurrentVideo()) - 1);
         } else {
             openVideo(secondPlaylist.length - 1);
         }
