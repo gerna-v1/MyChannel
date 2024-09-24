@@ -9,7 +9,10 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1600,
     height: 900,
+    minWidth: 480,
+    minHeight: 480,
     autoHideMenuBar: true, 
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -22,6 +25,23 @@ function createWindow() {
   win.loadFile('index.html');
 
   // win.webContents.openDevTools();
+
+  ipcMain.handle('window-minimize', () => {
+    win.minimize();
+  });
+  
+  ipcMain.handle('window-maximize', () => {
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+  });
+  
+  ipcMain.handle('window-close', () => {
+    win.close();
+  });
+  
 }
 
 app.whenReady().then(() => {
@@ -175,3 +195,4 @@ ipcMain.handle('login-user', async (event, { username, password }) => {
 ipcMain.handle('logoff-user', async () => {
   return { success: true, message: 'La sesión fue cerrada con éxito' };
 });
+

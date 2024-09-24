@@ -13,3 +13,9 @@ contextBridge.exposeInMainWorld('loginAPI', {
   loginUser: (username, password) => ipcRenderer.invoke('login-user', { username, password }),
   logoffUser: () => ipcRenderer.invoke('logoff-user')
 });
+
+contextBridge.exposeInMainWorld('windowAPI', {
+  minimize: () => ipcRenderer.invoke('window-minimize'),
+  maximize: () => ipcRenderer.invoke('window-maximize'),
+  close: () => ipcRenderer.invoke('window-close')
+});

@@ -22,13 +22,24 @@ var fullscreen = videoPlayer.querySelector(".fullscreen");
 
 mainVideo.addEventListener("canplay", (e) => {
     console.log("Video cargado");
-    mainVideo.volume = 0.5;
+    mainVideo.volume = lastVolume / 100;
     setDuration();
 });
 
 if (mainVideo.readyState >= 3) {
     setDuration();
 }
+
+videoPlayer.addEventListener('mousemove', showControls);
+videoPlayer.addEventListener('click', showControls);
+videoPlayer.addEventListener('play', showControls);
+videoPlayer.addEventListener('pause', showControls);
+
+videoPlayer.addEventListener('mouseenter', resetHideControlsTimeout);
+videoPlayer.addEventListener('mouseleave', () => {
+    clearTimeout(hideControlsTimeout);
+    hideControls(); 
+});
 
 mainVideo.addEventListener("timeupdate", (e) => {
     let currentTime = mainVideo.currentTime;

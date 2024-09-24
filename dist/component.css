@@ -134,7 +134,7 @@
 
 .controls .progress-area .progress-bar {
     position: relative;
-    width: 50%;
+    width: 0%;
     background: rgba(25, 157, 245, 0.815);
     height: inherit;
     border-radius: inherit;

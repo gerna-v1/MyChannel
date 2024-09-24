@@ -10,10 +10,12 @@ const getRandomDate = () => {
 var videos = [];
 var secondPlaylist = JSON.parse(JSON.stringify([]));
 
+
+var hideControlsTimeout;
 var darkMode = false;
 var openBox = false;
 var lastButton;
-var lastVolume = 0;
+var lastVolume = 20;
 var videoCount = 0;
 var isKeyboardDownAdded = false;
 var currentUser;
@@ -34,6 +36,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     videos = await loadVideos();
     secondPlaylist = JSON.parse(JSON.stringify(videos));
     generateVideoGrid(videos);
+
+    document.getElementById('minimize-button').addEventListener('click', () => {
+        window.windowAPI.minimize();
+    });
+      
+    document.getElementById('maximize-button').addEventListener('click', () => {
+        window.windowAPI.maximize();
+        const maximize = document.getElementById('maximize');
+        maximize.innerHTML === 'ad_group' ? maximize.innerHTML = 'crop_square' : maximize.innerHTML = 'ad_group';
+    });
+      
+    document.getElementById('close-button').addEventListener('click', () => {
+        window.windowAPI.close();
+    });
 
     document.querySelector('.logo-button').addEventListener('click', () => {
         generateVideoGrid(videos);
@@ -85,17 +101,6 @@ const search = () => {
     generateVideoGrid(secondPlaylist);
     document.querySelector('#searchbar').value = '';
 }
-
-document.addEventListener("keydown", (e) => {
-
-    const activeElement = document.activeElement;
-    const elementId = activeElement.id;
-    const isInputField = activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA';
-
-    if (e.key === 'Enter' && isInputField && elementId == 'searchbar') {
-        search();
-    }
-});
 
 const toggleBox = async (button) => {
 
@@ -258,7 +263,7 @@ const playerComponent = (video) => {
                         </span>
                         <span class="icon">
                             <i class="material-symbols-outlined volume">volume_up</i>
-                            <input type="range" min="0" max="100" id="volume-range" value="50">
+                            <input type="range" min="0" max="100" id="volume-range" value="${lastVolume}">
                         </span>
                         <div class="timer non-selectable">
                             <span class="current">00:00</span> / <span class="duration">00:00</span>
@@ -299,8 +304,6 @@ const playerComponent = (video) => {
             </div>
         </div>
     </div>
-
-    <script src="./dist/component.js"></script>
 `;
 
     let metadata;
@@ -308,8 +311,7 @@ const playerComponent = (video) => {
     if (!document.querySelector('.metadata')) {
         metadata = document.createElement('div');
         metadata.classList.add('metadata');
-    }
-    else {
+    } else {
         metadata = document.querySelector('.metadata');
         metadata.innerHTML = '';
     }
@@ -360,7 +362,7 @@ const playerComponent = (video) => {
             </section>
         </div>`;
 
-    document.querySelector('#main').appendChild(metadata);
+    document.querySelector('.content-container').appendChild(metadata);
     let playlist = document.querySelector('.playlist');
     let comments = document.querySelector('.comments');
 
@@ -382,22 +384,11 @@ const playerComponent = (video) => {
 
     secondPlaylist.forEach((video, index) => {
 
-        if (video.title.length > 40) {
-            title = video.title.substring(0, 20) + '...';
-        }
-        else {
-            title = video.title;
-        };
-
-        if (video.description.length > 50) {
-            description = video.description.substring(0, 69) + '...';
-        }
-        else {
-            description = video.description;
-        };
+        let title = video.title.length > 40 ? video.title.substring(0, 20) + '...' : video.title;
+        let description = video.description.length > 50 ? video.description.substring(0, 69) + '...' : video.description;
 
         playlist.innerHTML +=
-            `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}"   >
+            `<div class="video flex flex-col items-center w-full rounded" style="background-color: ${videoBgColor}">
             <button class="flex justify-center items-center w-full h-56 open-video" data-index="${index}">
                 <img src="${video.imageUrl}" alt="Image" class="thumbn w-full h-full object-contain data ${thumbnBgColor}">
             </button>
@@ -408,15 +399,14 @@ const playerComponent = (video) => {
         </div>`;
     });
 
-    let commentInput = document.querySelector('#entercomment')
-    darkMode ? commentInput.style.backgroundColor = 'var(--searchcolor_dark)' : commentInput.style.backgroundColor = 'white' // I don't like the searc color for the comment box
+    let commentInput = document.querySelector('#entercomment');
+    darkMode ? commentInput.style.backgroundColor = 'var(--searchcolor_dark)' : commentInput.style.backgroundColor = 'white'; // I don't like the search color for the comment box
 
     // Event listeners 
 
     if (!isKeyboardDownAdded) {
         document.addEventListener('keydown', keyboardEvents);
-    }
-    else {
+    } else {
         document.removeEventListener('keydown', keyboardEvents);
         document.addEventListener('keydown', keyboardEvents);
     }
@@ -444,6 +434,9 @@ const playerComponent = (video) => {
         script.src = './dist/component.js';
         document.querySelector('#content').appendChild(script);
     }
+
+    mainVideo = document.querySelector('#main-video');
+    mainVideo.volume = lastVolume / 100;
 
     videoCount = 0;
 
@@ -623,6 +616,7 @@ const switchMode = () => {
     let comments = document.querySelectorAll('.comment');
     let data = document.querySelectorAll('.data');
     let commentbutton = document.querySelectorAll('.commentbutton');
+    let titlebaricon = document.querySelector('.title-bar-icon');
 
     const dark_background = 'var(--dark_bg)';
     const light_background = 'var(--light_bg)';
@@ -637,6 +631,7 @@ const switchMode = () => {
             applogo.src = './img/applogo_dark.png'
         }
 
+        titlebaricon.src = './img/applogo_dark.ico';
         logo.src = './img/mychannel_dark.png';
 
         header.classList.replace("bg-gray-100", "bg-neutral-800");
@@ -700,6 +695,7 @@ const switchMode = () => {
             applogo.src = './img/applogo.png'
         }
 
+        titlebaricon.src = './img/applogo.ico';
         logo.src = './img/mychannel_light.png';
 
         header.classList.replace("bg-neutral-800", "bg-gray-100");
@@ -1100,6 +1096,20 @@ const keyboardEvents = (e) => {
             break;
     }
 }
+
+const hideControls = () => {
+    controls.style.opacity = 0; 
+};
+
+const showControls = () => {
+    controls.style.opacity = 1; 
+    resetHideControlsTimeout(); 
+};
+
+const resetHideControlsTimeout = () => {
+    clearTimeout(hideControlsTimeout);
+    hideControlsTimeout = setTimeout(hideControls, 4000); 
+};
 
 const playVideo = () => {
     play_pause.innerHTML = "pause";
